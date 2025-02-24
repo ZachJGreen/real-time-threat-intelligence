@@ -45,7 +45,7 @@ Prerequisites
 	PostgreSQL
 	Access to OSINT API keys (Shodan, Have I Been Pwned, VirusTotal)
 
-	Steps to Run the Project
+Steps to Run the Project
 
 1.	First of all clone this repository
 
