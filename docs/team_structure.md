@@ -1,9 +1,5 @@
 # Team Structure
 
-This document outlines the team structure, including roles, responsibilities, and the names of team members assigned to each role.
-
----
-
 ## Team Members
 
 | Role                | Name          | Responsibilities                                                                 |
