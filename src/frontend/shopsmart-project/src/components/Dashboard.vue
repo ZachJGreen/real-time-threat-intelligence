@@ -4,6 +4,6 @@ import WelcomeItem from './WelcomeItem.vue'
 
 <template>
   <WelcomeItem>
-    Welcome to the Dashboard
+    Dashboard
   </WelcomeItem>
 </template>

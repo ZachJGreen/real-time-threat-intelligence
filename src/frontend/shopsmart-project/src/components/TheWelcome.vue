@@ -7,7 +7,7 @@ import DocumentationIcon from './icons/IconDocumentation.vue'
   <WelcomeItem>
     <template #icon>
     </template>
-    <template #heading>Dashboard</template>
+    <template #heading>Home</template>
 
   </WelcomeItem>
 

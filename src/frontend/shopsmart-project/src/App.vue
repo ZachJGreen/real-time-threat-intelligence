@@ -1,5 +1,5 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import Banner from './components/Banner.vue'
 import TheWelcome from './components/TheWelcome.vue'
 </script>
 
@@ -8,18 +8,17 @@ import TheWelcome from './components/TheWelcome.vue'
     <!--<img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="Welcome to our" />
+      <Banner msg="Welcome to our" />
     </div>
 
   </header>
 
   <nav>
-    <RouterLink to="/">Go Home</RouterLink>
-    <RouterLink to="/dashboard">Go to Dashboard :D</RouterLink>
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/dashboard">Dashboard</RouterLink>
   </nav>
   
   <main>
-    <TheWelcome />
     <RouterView />
   </main>
 </template>
