@@ -4,12 +4,7 @@ import DocumentationIcon from './icons/IconDocumentation.vue'
 </script>
 
 <template>
-  <WelcomeItem>
-    <template #icon>
-    </template>
-    <template #heading>Home</template>
-
-  </WelcomeItem>
+    <h1>Home</h1>
 
   
 

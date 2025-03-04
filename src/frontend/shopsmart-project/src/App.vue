@@ -1,6 +1,6 @@
 <script setup>
 import Banner from './components/Banner.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import TheWelcome from './components/Home.vue'
 </script>
 
 <template>

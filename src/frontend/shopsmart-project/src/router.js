@@ -1,6 +1,6 @@
 import { createMemoryHistory, createRouter } from 'vue-router';
 
-import WelcomeView from './components/TheWelcome.vue'
+import WelcomeView from './components/Home.vue'
 import DashboardView from './components/Dashboard.vue'
 
 const routes = [
