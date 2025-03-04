@@ -5,15 +5,22 @@ import TheWelcome from './components/TheWelcome.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <!--<img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld msg="Welcome to our" />
     </div>
+
   </header>
 
+  <nav>
+    <RouterLink to="/">Go Home</RouterLink>
+    <RouterLink to="/dashboard">Go to Dashboard :D</RouterLink>
+  </nav>
+  
   <main>
     <TheWelcome />
+    <RouterView />
   </main>
 </template>
 
