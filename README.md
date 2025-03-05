@@ -44,3 +44,20 @@ The purpose of the **Real-time Threat Intelligence (RTTI)** system is to track a
 1. Clone this repository:
    ```bash
    git clone <repository-url>
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up the PostgreSQL database:
+   - Create a new database and update the connection details in the configuration file.
+
+4. Configure API keys:
+   - Add your OSINT API keys (Shodan, Have I Been Pwned, VirusTotal) to the appropriate configuration file.
+
+5. Start the application:
+   ```bash
+   npm start
+   ```
