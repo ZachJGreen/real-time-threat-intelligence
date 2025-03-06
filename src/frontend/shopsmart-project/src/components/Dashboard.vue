@@ -1,29 +1,41 @@
-
-
 <template>
   <div class="container">
     <h1>Welcome to our</h1>
     <h2>ShopSmart Solutions</h2>
     
+
+    <!--Toogle Button -->
     <button @click="showDashboard = !showDashboard" class="dashboard-btn">
-      Dashboard
+      {{  showdashboard ? "Hide Dashboard" : "Show Dashboard "}}
     </button>
 
+    <!--Dashboard Sections -->
     <div v-if="showDashboard" class="dashboard-sections">
+    </div>
       <div class="box">
-        <h3>Threat Logs</h3>
-        <p>foo</p>
+        <h3>Threat Log</h3>
+        <ul>
+          <li v-for="(log, index) in threatLogs" :key="index">{{ log }}</li>
+        </ul>
       </div>
+
+
       <div class="box">
-        <h3>Risk Scores</h3>
-        <p>bar</p>
+        <h3>Risk-score</h3>
+        <ul>
+          <li v-for="(score, index) in riskScores" :key="index">{{ score }}</li>
+        </ul>
       </div>
+      
       <div class="box">
-        <h3>Real-time Alerts</h3>
-        <p>fizz</p>
+        <h3>Real-time Alert</h3>
+        <ul>
+          <li v-for="(alert, index) in realTimeAlerts" :key="index">{{ alert }}</li>
+        </ul>
       </div>
     </div>
-  </div>
+  
+
 </template>
 
 
@@ -32,11 +44,21 @@
 export default {
   data() {
     return {
-      showDashboard: false, // Initially, dashboard sections are hidden
+      showDashboard: false, //Initial State: Dashboard is hidden
+      threatLogs: ["Log 1", "Log 2", "Log 3"],
+      riskScores: ["Score A", "Score B", "Score C"],
+      realTimeAlerts: ["Alert X", "Alert Y", "Alert Z"]
     };
   },
+  methods: {
+  toogleDashboard() {
+    this.showDashboard= !this.showDashboard;
+   }
+  }
 };
+
 </script>
+
 
 <style>
 .container {
@@ -52,8 +74,8 @@ export default {
   color: white;
   border: none;
   cursor: pointer;
+  
 }
-
 .dashboard-btn:hover {
   background-color: #0056b3;
 }
@@ -61,18 +83,32 @@ export default {
 .dashboard-sections {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  gap: 25px;
+  margin-top: 25px;
+
 }
 
 .box {
-  width: 200px;
+  width: 250px;
   padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  text-align: center;
-  background-color: #f9f9f9;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #f8f8f8;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
-</style>
 
+h2 {
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 5px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  padding: 5px;
+  border-bottom: 1px solid #ddd;
+}
+</style>
