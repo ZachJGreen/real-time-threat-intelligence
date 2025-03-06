@@ -1,3 +1,8 @@
+<script setup>
+import Banner from './components/Banner.vue'
+import Home from './components/Home.vue'
+</script>
+
 <template>
   <div>
     <Dashboard />
