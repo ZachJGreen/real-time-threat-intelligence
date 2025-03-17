@@ -5,7 +5,7 @@ require("module").Module._initPaths();
 const express = require('express');
 const cors = require('cors');
 const { fetchShodanData } = require("../../api/shodan.js");
-
+const { Pool } = require('pg');
 
 
 require('dotenv').config();
@@ -14,6 +14,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const pool = new Pool({
+    user: 'your_db_user',
+    host: 'localhost',
+    database: 'your_db_name',
+    password: 'your_db_password',
+    port: 5432,
+});
 
 app.get('/', (req, res) => {
     res.send('Threat Intelligence API is running...');
@@ -28,6 +35,34 @@ app.get("/shodanFetchIPData/:ip", async (req, res) => {
     }
 });
 
+app.get("/getThreatData", async (req, res) => {
+    try {
+      const query = `
+        SELECT t.threat_name, a.asset_name, v.vulnerability_name, tm.likelihood, tm.impact, tm.risk_score
+        FROM tva_mapping tm
+        JOIN threats t ON tm.threat_id = t.id
+        JOIN assets a ON tm.asset_id = a.id
+        JOIN vulnerabilities v ON tm.vulnerability_id = v.id
+      `;
+      const dbData = await pool.query(query);
+      const shodanData = await fetchShodanData("8.8.8.8");
+
+      const transformedShodanData = {
+        threat_name: "Shodan Threat", // Example threat name
+        asset_name: "8.8.8.8", // Use the IP as the asset name
+        vulnerability_name: "Open Ports", // Example vulnerability
+        likelihood: 3, // Example likelihood (1-5)
+        impact: 4, // Example impact (1-5)
+        risk_score: 12, // Example risk score (likelihood * impact)
+      };
+
+      const combinedData = [...dbData.rows, transformedShodanData];
+      res.json(combinedData);
+    } catch (error) {
+      console.error('Error fetching threat data:', error);
+      res.status(500).json({ error: 'Failed to fetch threat data' });
+    }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
