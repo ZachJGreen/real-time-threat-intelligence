@@ -2,12 +2,10 @@
   <div class="container">
     <h1>Main Dashboard</h1>
 
-    <!--Toogle Button -->
     <button @click="showDashboard = !showDashboard" class="dashboard-btn">
       {{  showdashboard ? "Hide Dashboard" : "Show Dashboard "}}
     </button>
     
-    <!-- Conditionally render the ThreatDashboard based on showDashboard -->
     <ThreatDashboard v-if="showDashboard" />
   </div>
 </template>

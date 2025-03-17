@@ -1,4 +1,3 @@
-// Ensure Node.js looks for modules in the backend folder
 process.env.NODE_PATH = __dirname + "/node_modules";
 require("module").Module._initPaths();
 
@@ -48,12 +47,12 @@ app.get("/getThreatData", async (req, res) => {
       const shodanData = await fetchShodanData("8.8.8.8");
 
       const transformedShodanData = {
-        threat_name: "Shodan Threat", // Example threat name
-        asset_name: "8.8.8.8", // Use the IP as the asset name
-        vulnerability_name: "Open Ports", // Example vulnerability
-        likelihood: 3, // Example likelihood (1-5)
-        impact: 4, // Example impact (1-5)
-        risk_score: 12, // Example risk score (likelihood * impact)
+        threat_name: "Shodan Threat", 
+        asset_name: "8.8.8.8",
+        vulnerability_name: "Open Ports",
+        likelihood: 3, 
+        impact: 4, 
+        risk_score: 12, 
       };
 
       const combinedData = [...dbData.rows, transformedShodanData];

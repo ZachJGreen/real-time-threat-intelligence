@@ -1,8 +1,6 @@
 <template>
     <div class="threat-dashboard">
       <h2>Threat Dashboard</h2>
-
-      <!-- Dashboard Sections -->
       <div v-if="showDashboard" class="dashboard-sections">
         <div class="box">
           <h3>Threat Log</h3>
@@ -41,15 +39,15 @@
     data() {
       return {
         showDashboard: false,
-        threatLogs: [], // Holds the threat data fetched from the backend
-        averageRiskScore: 0, // Holds the average risk score
-        realTimeAlerts: [], // Placeholder for real-time alerts
+        threatLogs: [],
+        averageRiskScore: 0, 
+        realTimeAlerts: [], 
       };
     },
 
     methods: {
       toggleDashboard() {
-        this.showDashboard = !this.showDashboard; // Toggle the visibility of the dashboard
+        this.showDashboard = !this.showDashboard; 
       },
       async fetchData() {
         try {
@@ -58,11 +56,9 @@
             console.log('Data fetched:', response.data);
             this.threatLogs = response.data;
 
-            // Calculate the average risk score
             const totalRiskScore = this.threatLogs.reduce((sum, log) => sum + log.risk_score, 0);
             this.averageRiskScore = (totalRiskScore / this.threatLogs.length).toFixed(2);
 
-            // Placeholder for real-time alerts
             this.realTimeAlerts = [
             "Unauthorized access detected on Server.",
             "Potential data breach in progress on MySQL.",
