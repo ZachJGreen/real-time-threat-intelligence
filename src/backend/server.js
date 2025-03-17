@@ -1,9 +1,6 @@
-process.env.NODE_PATH = __dirname + "/node_modules";
-require("module").Module._initPaths();
-
 const express = require('express');
 const cors = require('cors');
-const { fetchShodanData } = require("../../api/shodan.js");
+const { fetchShodanData } = require("/api/shodan.js");
 const { Pool } = require('pg');
 
 
@@ -44,18 +41,24 @@ app.get("/getThreatData", async (req, res) => {
         JOIN vulnerabilities v ON tm.vulnerability_id = v.id
       `;
       const dbData = await pool.query(query);
-      const shodanData = await fetchShodanData("8.8.8.8");
+      let shodanData;
+      try {
+        shodanData = await fetchShodanData("8.8.8.8");
+      } catch (shodanError) {
+        console.error('Error fetching Shodan data:', shodanError);
+        shodanData = null;
+      } 
 
-      const transformedShodanData = {
+      const transformedShodanData = shodanData ? {
         threat_name: "Shodan Threat", 
         asset_name: "8.8.8.8",
         vulnerability_name: "Open Ports",
         likelihood: 3, 
         impact: 4, 
         risk_score: 12, 
-      };
+      } : null;
 
-      const combinedData = [...dbData.rows, transformedShodanData];
+      const combinedData = transformedShodanData ? [...dbData.rows, transformedShodanData] : dbData.rows;
       res.json(combinedData);
     } catch (error) {
       console.error('Error fetching threat data:', error);
