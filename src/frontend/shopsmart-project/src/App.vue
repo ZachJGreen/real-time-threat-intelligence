@@ -4,9 +4,22 @@ import Home from './components/Home.vue'
 </script>
 
 <template>
-  <div>
-    <Dashboard />
-  </div>
+  <header>
+    <div class="wrapper">
+      <Banner msg="Welcome to our" />
+    </div>
+  
+  </header>
+
+  <nav>
+    <RouterLink to="/">Home</RouterLink>
+    <RouterLink to="/dashboard">Dashboard</RouterLink>
+  </nav>
+
+  <main>
+    <RouterView/>
+  </main>
+
 </template>
 
 <script>
