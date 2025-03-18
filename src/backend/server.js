@@ -1,6 +1,10 @@
+// Ensure Node.js looks for modules in the backend folder
+process.env.NODE_PATH = __dirname + "/node_modules";
+require("module").Module._initPaths();
+
 const express = require('express');
 const cors = require('cors');
-const { fetchShodanData } = require("/api/shodan.js");
+const { fetchShodanData } = require("../../api/shodan.js");
 const { Pool } = require('pg');
 
 

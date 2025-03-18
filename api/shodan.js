@@ -17,6 +17,7 @@ async function fetchShodanData(ip) {
             impact: 4, 
             risk_score: 12, 
         };
+        return response.data;
     } catch (error) {
         console.error("Error fetching from Shodan:", error.response?.data || error.message);
         return null;
