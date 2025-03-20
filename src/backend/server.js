@@ -1,14 +1,13 @@
 // Ensure Node.js looks for modules in the backend folder
 process.env.NODE_PATH = __dirname + "/node_modules";
 require("module").Module._initPaths();
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const { fetchShodanData } = require("../../api/shodan.js");
 
 
-
-require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -27,7 +26,6 @@ app.get("/shodanFetchIPData/:ip", async (req, res) => {
         res.status(500).json({ error: "Failed to fetch data from Shodan" });
     }
 });
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

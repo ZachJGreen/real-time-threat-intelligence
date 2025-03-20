@@ -11,7 +11,7 @@ CREATE TABLE tva_mapping (
 
 -- Not sure if I should just these insert statements into another file
 -- but the following statements all threat-vulnerability pairs to the TVA table (Task 2)
-
+/*
 -- add assets
 INSERT INTO assets (asset_name, asset_type, description) VALUES
     ('Server', 'Hardware', 'Hosts website and customer data'),
@@ -21,6 +21,7 @@ INSERT INTO assets (asset_name, asset_type, description) VALUES
     ('Customer Information', 'Data', 'Includes name, address, and payment details'),
     ('IT Manager', 'People', 'Maintains IT infrastructure and updates inventory'),
     ('Payments through payment gateway', 'Process', 'Handles customer payments through a third-party payment gateway');
+
 
 -- add threats
 INSERT INTO threats (asset_id, threat_name) VALUES
@@ -50,8 +51,9 @@ INSERT INTO tva_mapping (asset_id, threat_id, vulnerability_id, likelihood, impa
     (4, 4, 4, 4, 5),
     (5, 5, 5, 3, 4),
     (6, 6, 6, 2, 5), 
-    (7, 7, 7, 4, 4); 
-    
+    (7, 7, 7, 4, 4);
+
+ */
 
 
 

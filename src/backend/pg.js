@@ -11,4 +11,4 @@ client.connect()
 .then(()=>{console.log("Connected to pg")})
 .catch(()=>{console.log("Cant connect to pg")})
 
-module.export={client}
+module.exports={client}
