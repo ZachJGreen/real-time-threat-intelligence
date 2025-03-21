@@ -1,32 +1,73 @@
 <template>
-  <div class="container">
-    <h1>Main Dashboard</h1>
+  <div>
+    <h2>Real Tiem Threat Alerts</h2>
+    <ul>
+      <li
+        v-for"alert in alerts"
+        :key="alert.id"
+        :class="{ 'high-risk': alert.riskScore > 20 }"
+        >
+        ⚠️ {{ alert.name }} - Risk Score: {{ alert.riskScore }}
+      </li>
+    </ul>
 
-    <button @click="showDashboard = !showDashboard" class="dashboard-btn">
-      {{  showdashboard ? "Hide Dashboard" : "Show Dashboard "}}
-    </button>
-    
-    <ThreatDashboard v-if="showDashboard" />
+    <button @click="sendCriticalAlert">Simulate Critical Alert</button>
   </div>
 </template>
 
 
-
 <script>
-import ThreatDashboard from './ThreatDashboard.vue';
+import ThreatDashboard from "./ThreatDashboard.vue";
+import axios from "axios";
+
 export default {
   name: "Dashboard",
   components: {
     ThreatDashboard,
   },
-
   data() {
     return {
       showDashboard: false,
+      alerts: [],
     };
+  },
+  methods: {
+    receiveThreat(newThreat) {
+      this.alerts.push(newThreat);
+
+      if (newThreat.riskScore > 20) {
+        this.notifyCriticalThreat(newThreat);
+      }
+    },
+    async notifyCriticalThreat(threat) {
+      console.log(`Critical Threat Detected: ${threat.name}`);
+
+      try {
+        await axios.post("https://your-webhook-url.com", {
+          threatName: threat.name,
+          riskScore: threat.riskScore,
+          message: "Critical Threat Detected!",
+        });
+        alert(`🚨 Email/Webhook sent for ${threat.name}`);
+      } catch (error) {
+        console.error("Error sending alert:", error);
+      }
+    },
+  },
+  mounted() {
+    // Simulating new threats every 5 seconds
+    setInterval(() => {
+      const newThreat = {
+        id: Date.now(),
+        name: `Threat ${Math.floor(Math.random() * 100)}`,
+        riskScore: Math.floor(Math.random() * 60),
+      };
+      this.receiveThreat(newThreat);
+    }, 5000);
   },
 };
 </script>
+
 
 
 <style>
