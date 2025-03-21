@@ -45,3 +45,4 @@ async function fetchAndStoreShodanData(ip) {
 fetchAndStoreShodanData("8.8.8.8");
 
 module.exports = { fetchAndStoreShodanData };
+
