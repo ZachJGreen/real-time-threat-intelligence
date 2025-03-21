@@ -15,14 +15,23 @@ app.use(cors());
 app.use(express.json());
 
 
-//app.get('/', (req, res) => {
-    //res.send('Threat Intelligence API is running...');
-//});
+app.get('/', (req, res) => {
+    res.send('Welcome to the Real-Time Threat Intelligence API!');
+});
+
 app.post("/api/fetchShodanThreatData", async (req, res) => {
-    const { ip } = req.params;
-    const data = await fetchandStoreShodanData(ip);
-    await fetchAndStoreShodanData(ip);
-    res.json({ message: "Shodan threat data fetched and stored successfully" });
+    const { ip } = req.body;  // Use req.body to access the IP
+
+    if (!ip) {
+        return res.status(400).json({ message: "IP address is required" });
+    }
+
+    try {
+        await fetchAndStoreShodanData(ip);  // Call the function to fetch and store data
+        res.json({ message: "Shodan threat data fetched and stored successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching or storing Shodan data", error: error.message });
+    }
 });
 
 const PORT = process.env.PORT || 5000;
