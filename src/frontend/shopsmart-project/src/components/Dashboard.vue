@@ -1,63 +1,73 @@
 <template>
-  <div class="container">
-    <h1>Welcome to our</h1>
-    <h2>ShopSmart Solutions</h2>
-    
+  <div>
+    <h2>Real Tiem Threat Alerts</h2>
+    <ul>
+      <li
+        v-for"alert in alerts"
+        :key="alert.id"
+        :class="{ 'high-risk': alert.riskScore > 20 }"
+        >
+        ⚠️ {{ alert.name }} - Risk Score: {{ alert.riskScore }}
+      </li>
+    </ul>
 
-    <!--Toogle Button -->
-    <button @click="showDashboard = !showDashboard" class="dashboard-btn">
-      {{  showdashboard ? "Hide Dashboard" : "Show Dashboard "}}
-    </button>
-
-    <!--Dashboard Sections -->
-    <div v-if="showDashboard" class="dashboard-sections">
-    </div>
-      <div class="box">
-        <h3>Threat Log</h3>
-        <ul>
-          <li v-for="(log, index) in threatLogs" :key="index">{{ log }}</li>
-        </ul>
-      </div>
-
-
-      <div class="box">
-        <h3>Risk-score</h3>
-        <ul>
-          <li v-for="(score, index) in riskScores" :key="index">{{ score }}</li>
-        </ul>
-      </div>
-      
-      <div class="box">
-        <h3>Real-time Alert</h3>
-        <ul>
-          <li v-for="(alert, index) in realTimeAlerts" :key="index">{{ alert }}</li>
-        </ul>
-      </div>
-    </div>
-  
-
+    <button @click="sendCriticalAlert">Simulate Critical Alert</button>
+  </div>
 </template>
 
 
-
 <script>
+import ThreatDashboard from "./ThreatDashboard.vue";
+import axios from "axios";
+
 export default {
+  name: "Dashboard",
+  components: {
+    ThreatDashboard,
+  },
   data() {
     return {
-      showDashboard: false, //Initial State: Dashboard is hidden
-      threatLogs: ["Log 1", "Log 2", "Log 3"],
-      riskScores: ["Score A", "Score B", "Score C"],
-      realTimeAlerts: ["Alert X", "Alert Y", "Alert Z"]
+      showDashboard: false,
+      alerts: [],
     };
   },
   methods: {
-  toogleDashboard() {
-    this.showDashboard= !this.showDashboard;
-   }
-  }
-};
+    receiveThreat(newThreat) {
+      this.alerts.push(newThreat);
 
+      if (newThreat.riskScore > 20) {
+        this.notifyCriticalThreat(newThreat);
+      }
+    },
+    async notifyCriticalThreat(threat) {
+      console.log(`Critical Threat Detected: ${threat.name}`);
+
+      try {
+        await axios.post("https://your-webhook-url.com", {
+          threatName: threat.name,
+          riskScore: threat.riskScore,
+          message: "Critical Threat Detected!",
+        });
+        alert(`🚨 Email/Webhook sent for ${threat.name}`);
+      } catch (error) {
+        console.error("Error sending alert:", error);
+      }
+    },
+  },
+  mounted() {
+    // Simulating new threats every 5 seconds
+    setInterval(() => {
+      const newThreat = {
+        id: Date.now(),
+        name: `Threat ${Math.floor(Math.random() * 100)}`,
+        riskScore: Math.floor(Math.random() * 60),
+      };
+      this.receiveThreat(newThreat);
+    }, 5000);
+  },
+};
 </script>
+
 
 
 <style>
@@ -91,14 +101,14 @@ export default {
 .box {
   width: 250px;
   padding: 15px;
-  border: 2px solid #ccc;
+  border: 2px solid #2f1414;
   border-radius: 8px;
-  background-color: #f8f8f8;
+  background-color: #8e8e8e;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-  border-bottom: 2px solid #007bff;
+  border-bottom: 2px solid #000000;
   padding-bottom: 5px;
 }
 
@@ -109,6 +119,6 @@ ul {
 
 li {
   padding: 5px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #7f5858;
 }
 </style>

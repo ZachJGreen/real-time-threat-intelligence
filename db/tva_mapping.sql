@@ -35,6 +35,7 @@ INSERT INTO assets (asset_name, asset_type, description) VALUES
     ('Payments through payment gateway', 'Process', 'Handles customer payments through a third-party payment gateway'),
     ('Updating inventory', 'Process', 'IT manager ensures inventory records are accurate');
 
+
 -- add threats
 INSERT INTO threats (asset_id, threat_name) VALUES
     (1, 'DDoS Attack'), 
