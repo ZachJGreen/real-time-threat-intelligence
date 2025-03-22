@@ -1,20 +1,19 @@
 <script setup>
 import Banner from './components/Banner.vue'
 import Home from './components/Home.vue'
+import ThreatDashboard from './components/ThreatDashboard.vue'
+import Dashboard from './components/Dashboard.vue'
+
 </script>
 
 <template>
   <div>
-    <Dashboard />
+    <Banner />
+    <Home />
+    <!-- <Dashboard /> -->
+    <ThreatDashboard />
   </div>
 </template>
 
 <script>
-import Dashboard from './components/Dashboard.vue';
-
-export default {
-  components: {
-    Dashboard
-  }
-};
 </script>
