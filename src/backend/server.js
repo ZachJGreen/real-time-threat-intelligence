@@ -4,7 +4,7 @@ require("module").Module._initPaths();
 
 const express = require('express');
 const cors = require('cors');
-const { fetchShodanData } = require("../../api/shodan.js");
+const { fetchShodanData } = require("../../api/fetch_osint");
 const { Pool } = require('pg');
 
 
@@ -23,17 +23,22 @@ const pool = new Pool({
 });
 
 app.get('/', (req, res) => {
-    res.send('Threat Intelligence API is running...');
+    res.send('Welcome to the Real-Time Threat Intelligence API!');
 });
-app.get("/shodanFetchIPData/:ip", async (req, res) => {
-    const { ip } = req.params;
-    const data = await fetchShodanData(ip);
-    if (data) {
-        res.json(data);
-    } else {
-        res.status(500).json({ error: "Failed to fetch data from Shodan" });
+
+app.post("/api/fetchShodanThreatData", async (req, res) => {
+    const { ip } = req.body;  // Use req.body to access the IP
+
+    if (!ip) {
+        return res.status(400).json({ message: "IP address is required" });
     }
-});
+
+
+    try {
+        await fetchAndStoreShodanData(ip);  // Call the function to fetch and store data
+        res.json({ message: "Shodan threat data fetched and stored successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching or storing Shodan data", error: error.message });
 
 app.get("/getThreatData", async (req, res) => {
     try {
