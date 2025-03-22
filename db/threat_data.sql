@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS threat_data (
+    id SERIAL PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    ports JSONB NOT NULL,
+    services JSONB NOT NULL,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
