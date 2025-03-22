@@ -4,6 +4,7 @@
     "axois": "^0.0.1-security",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "node-cron": "^3.0.3",
     "pg": "^8.14.1"
   }
 }

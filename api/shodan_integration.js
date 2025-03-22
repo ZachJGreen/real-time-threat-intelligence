@@ -47,24 +47,25 @@ const storeData = async (ip, ports, services) => {
     }
 };
 
-// API route for fetching and storing threat intelligence
-app.get('/shodan', async (req, res) => {
-    const ip = req.query.ip;
-    if (!ip) {
-        return res.status(400).json({ error: "IP address is required" });
-    }
-
+// Expose a function to fetch and store Shodan data
+const fetchAndStoreShodanData = async (ip) => {
     const shodanData = await getShodanData(ip);
     if (!shodanData) {
-        return res.status(500).json({ error: "Failed to fetch data from Shodan" });
+        console.error("Failed to fetch data from Shodan");
+        return;
     }
 
     const ports = shodanData.ports || [];
     const services = shodanData.hostnames || [];
 
-    const result = await storeData(ip, ports, services);
-    res.json(result);
-});
+    await storeData(ip, ports, services);
+};
+
+
+// Export the functions for use in the scheduler
+module.exports = {
+    fetchAndStoreShodanData,
+};
 
 // Start the server
 app.listen(port, () => {
