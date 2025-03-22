@@ -1,124 +1,108 @@
 <template>
   <div>
-    <h2>Real Tiem Threat Alerts</h2>
-    <ul>
-      <li
-        v-for"alert in alerts"
-        :key="alert.id"
-        :class="{ 'high-risk': alert.riskScore > 20 }"
+    <h1>"Welcome to ShopSmart solutions</h1>
+    <h2>Real-Time Threat Intelligence</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Threat Name</th>
+          <th>Risk Score</th>
+          <th>Vulnerabilities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="threat in threats"
+          :key="threat.id"
+          :class="{ 'high-risk': threat.riskScore > 20 }"
         >
-        ⚠️ {{ alert.name }} - Risk Score: {{ alert.riskScore }}
-      </li>
-    </ul>
+          <td>{{ threat.name }}</td>
+          <td>{{ threat.riskScore }}</td>
+          <td>{{ threat.vulnerability }}</td>
+        </tr>
+      </tbody>
+    </table>
 
     <button @click="sendCriticalAlert">Simulate Critical Alert</button>
   </div>
 </template>
 
-
 <script>
-import ThreatDashboard from "./ThreatDashboard.vue";
-import axios from "axios";
+import { ref, onMounted } from "vue";
 
 export default {
-  name: "Dashboard",
-  components: {
-    ThreatDashboard,
-  },
-  data() {
-    return {
-      showDashboard: false,
-      alerts: [],
+  setup() {
+    const threats = ref([]);
+
+    // List of real-world threats and vulnerabilities
+    const threatsList = [
+      { name: "SQL Injection", vulnerability: "Injection Flaws" },
+      { name: "Cross-Site Scripting (XSS)", vulnerability: "Improper Input Validation" },
+      { name: "Denial-of-Service (DoS)", vulnerability: "Resource Exhaustion" },
+      { name: "Man-in-the-Middle (MITM)", vulnerability: "Weak Encryption" },
+      { name: "Zero-Day Exploit", vulnerability: "Unknown Software Vulnerability" },
+      { name: "Phishing Attack", vulnerability: "Social Engineering" },
+      { name: "Ransomware Attack", vulnerability: "Unpatched Software" },
+      { name: "Cross-Site Request Forgery (CSRF)", vulnerability: "Session Hijacking" },
+      { name: "Brute Force Attack", vulnerability: "Weak Passwords" },
+      { name: "Malware Injection", vulnerability: "Unsecured File Uploads" },
+    ];
+
+    const receiveThreat = (newThreat) => {
+      threats.value.push(newThreat);
     };
-  },
-  methods: {
-    receiveThreat(newThreat) {
-      this.alerts.push(newThreat);
 
-      if (newThreat.riskScore > 20) {
-        this.notifyCriticalThreat(newThreat);
-      }
-    },
-    async notifyCriticalThreat(threat) {
-      console.log(`Critical Threat Detected: ${threat.name}`);
-
-      try {
-        await axios.post("https://your-webhook-url.com", {
-          threatName: threat.name,
-          riskScore: threat.riskScore,
-          message: "Critical Threat Detected!",
-        });
-        alert(`🚨 Email/Webhook sent for ${threat.name}`);
-      } catch (error) {
-        console.error("Error sending alert:", error);
-      }
-    },
-  },
-  mounted() {
-    // Simulating new threats every 5 seconds
-    setInterval(() => {
-      const newThreat = {
+    const sendCriticalAlert = () => {
+      const testThreat = {
         id: Date.now(),
-        name: `Threat ${Math.floor(Math.random() * 100)}`,
-        riskScore: Math.floor(Math.random() * 60),
+        name: "Test Critical Threat",
+        riskScore: 55,
+        vulnerability: "SQL Injection", // Example vulnerability
       };
-      this.receiveThreat(newThreat);
-    }, 5000);
+      receiveThreat(testThreat);
+    };
+
+    onMounted(() => {
+      setInterval(() => {
+        const newThreat = {
+          id: Date.now(),
+          name: `Threat ${Math.floor(Math.random() * 100)}`,
+          riskScore: Math.floor(Math.random() * 60),
+          vulnerability: ["XSS", "CSRF", "SQL Injection", "Buffer Overflow"][
+            Math.floor(Math.random() * 4)
+          ],
+        };
+        receiveThreat(newThreat);
+      }, 5000);
+    });
+
+    return {
+      threats,
+      sendCriticalAlert,
+    };
   },
 };
 </script>
 
-
-
-<style>
-.container {
-  text-align: center;
-  font-family: Arial, sans-serif;
-}
-
-.dashboard-btn {
-  margin: 20px;
-  padding: 10px 20px;
-  font-size: 18px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  
-}
-.dashboard-btn:hover {
-  background-color: #0056b3;
-}
-
-.dashboard-sections {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
+<style scoped>
+table {
+  width: 100%;
+  border-collapse: collapse;
   margin-top: 25px;
-
 }
 
-.box {
-  width: 250px;
-  padding: 15px;
-  border: 2px solid #2f1414;
-  border-radius: 8px;
-  background-color: #8e8e8e;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+th, td {
+  border: 1.5px solid #ddd;
+  padding: 8px;
+  text-align: left;
 }
 
-h2 {
-  border-bottom: 2px solid #000000;
-  padding-bottom: 5px;
+th {
+  background-color: #1a237e;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  padding: 5px;
-  border-bottom: 1px solid #7f5858;
+.high-risk {
+  background-color: #e8eaf6; 
 }
 </style>
