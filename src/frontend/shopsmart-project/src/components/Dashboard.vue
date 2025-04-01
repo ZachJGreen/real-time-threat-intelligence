@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h2>Real Tiem Threat Alerts</h2>
+    <h2>Real Time Threat Alerts</h2>
     <ul>
       <li
-        v-for"alert in alerts"
+        v-for="alert in alerts"
         :key="alert.id"
         :class="{ 'high-risk': alert.riskScore > 20 }"
         >
