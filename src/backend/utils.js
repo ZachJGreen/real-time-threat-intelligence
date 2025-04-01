@@ -1,0 +1,1 @@
+const calculate_risk = (likelihood, impact) => likelihood * impact;
