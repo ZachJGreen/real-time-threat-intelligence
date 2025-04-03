@@ -8,6 +8,8 @@ import { createVuetify } from 'vuetify'
 import router from './router';
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import { threatData } from './utils/risk_prioritization';  
+
 
 const vuetify = createVuetify({
     components,
@@ -21,3 +23,4 @@ const vuetify = createVuetify({
   app.use(router)
   app.use(vuetify)
   app.mount('#app')
+  console.log(threatData);
