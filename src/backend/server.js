@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '../../.env'});
+
 // Ensure Node.js looks for modules in the backend folder
 process.env.NODE_PATH = __dirname + "/node_modules";
 require("module").Module._initPaths();

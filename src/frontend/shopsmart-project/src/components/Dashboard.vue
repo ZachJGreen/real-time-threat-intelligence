@@ -1,17 +1,12 @@
 <template>
-  <div>
-    <h2>Real Tiem Threat Alerts</h2>
-    <ul>
-      <li
-        v-for"alert in alerts"
-        :key="alert.id"
-        :class="{ 'high-risk': alert.riskScore > 20 }"
-        >
-        ⚠️ {{ alert.name }} - Risk Score: {{ alert.riskScore }}
-      </li>
-    </ul>
+  <div class="container">
+    <h1>Main Dashboard</h1>
 
-    <button @click="sendCriticalAlert">Simulate Critical Alert</button>
+    <button @click="showDashboard = !showDashboard" class="dashboard-btn">
+      {{  showDashboard ? "Hide Dashboard" : "Show Dashboard "}}
+    </button>
+    
+    <ThreatDashboard v-if="showDashboard" />
   </div>
 </template>
 
@@ -42,16 +37,20 @@ export default {
     async notifyCriticalThreat(threat) {
       console.log(`Critical Threat Detected: ${threat.name}`);
 
+      const webhookUrl = "https://real-webhook-url.com/alert";
+
       try {
-        await axios.post("https://your-webhook-url.com", {
-          threatName: threat.name,
-          riskScore: threat.riskScore,
-          message: "Critical Threat Detected!",
-        });
-        alert(`🚨 Email/Webhook sent for ${threat.name}`);
+          await axios.post(webhookUrl, {
+            threatName: threat.name,
+            riskScore: threat.riskScore,
+            message: "Critical Threat Detected!",
+          });
+          alert(`🚨 Email/Webhook sent for ${threat.name}`);
       } catch (error) {
-        console.error("Error sending alert:", error);
+          console.error("Error sending alert:", error.response || error.message);
+          alert("There was an error sending the alert. Check the console for details.");
       }
+
     },
   },
   mounted() {

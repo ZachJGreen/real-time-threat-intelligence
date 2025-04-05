@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../../.env'});
 const express = require('express');
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
