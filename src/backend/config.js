@@ -1,5 +1,8 @@
+
+require('dotenv').config(); 
+
 module.exports = {
     shodanApiKey: process.env.SHODAN_API_KEY,
-    githubToken: process.env.GITHUB_TOKEN,
-    githubRepo: process.env.GITHUB_REPO,
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: process.env.SUPABASE_ANON_KEY
 };
