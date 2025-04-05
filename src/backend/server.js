@@ -8,6 +8,7 @@ const express = require('express');
 const cors = require('cors');
 const { fetchAndStoreShodanData } = require("../../api/fetch_osint");
 const supabase = require('./supabase');
+const cbaAnalysis = require('./cba_analysis');
 
 
 const app = express();
@@ -142,6 +143,80 @@ app.get("/api/getRecentAlerts", async (req, res) => {
   }
 });
 
+// Endpoint to perform CBA for a specific threat
+app.post("/api/performCBA", async (req, res) => {
+  try {
+      const { threatId, threatType, assetValue, controls } = req.body;
+      
+      if (!threatType || !assetValue) {
+          return res.status(400).json({
+              error: "Missing required parameters. Please provide threatType and assetValue."
+          });
+      }
+      
+      // Use provided controls or get defaults based on threat type
+      const securityControls = controls || cbaAnalysis.getDefaultControls(threatType);
+      
+      if (securityControls.length === 0) {
+          return res.status(404).json({
+              error: "No security controls found for this threat type",
+              message: "Please provide custom controls or use a recognized threat type"
+          });
+      }
+      
+      const results = await cbaAnalysis.evaluateSecurityControls(
+          threatId,
+          assetValue,
+          securityControls
+      );
+      
+      // Store the CBA results in Supabase for historical reference
+      if (results.length > 0) {
+          const { error } = await supabase
+              .from('cba_analyses')
+              .insert({
+                  threat_id: threatId,
+                  asset_value: assetValue,
+                  analysis_date: new Date().toISOString(),
+                  results: results
+              });
+              
+          if (error) {
+              console.error("Error storing CBA results:", error);
+          }
+      }
+      
+      res.json(results);
+  } catch (error) {
+      console.error("Error performing CBA:", error);
+      res.status(500).json({
+          error: "Error performing cost-benefit analysis",
+          message: error.message
+      });
+  }
+});
+
+// Endpoint to get historical CBA analyses
+app.get("/api/cbaHistory", async (req, res) => {
+  try {
+      const { data, error } = await supabase
+          .from('cba_analyses')
+          .select('*')
+          .order('analysis_date', { ascending: false });
+          
+      if (error) {
+          throw error;
+      }
+      
+      res.json(data);
+  } catch (error) {
+      console.error("Error fetching CBA history:", error);
+      res.status(500).json({
+          error: "Error fetching CBA history",
+          message: error.message
+      });
+  }
+});
 
 
 const PORT = process.env.PORT || 5000;
