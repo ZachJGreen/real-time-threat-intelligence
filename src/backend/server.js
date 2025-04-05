@@ -10,8 +10,6 @@ const { fetchAndStoreShodanData } = require("../../api/fetch_osint");
 const supabase = require('./supabase');
 
 
-require('dotenv').config();
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -35,7 +33,8 @@ app.post("/api/fetchShodanThreatData", async (req, res) => {
         res.json({ message: "Shodan threat data fetched and stored successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error fetching or storing Shodan data", error: error.message });
-    }});
+    }
+});
 
 app.get("/api/getThreatData", async (req, res) => {
   try {
