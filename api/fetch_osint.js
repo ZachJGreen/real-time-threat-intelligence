@@ -104,7 +104,10 @@ async function processVulnerabilities(ip, vulns) {
                 throw new Error(`Error creating asset: ${assetError.message}`);
             }
             
-            assets = [newAsset];
+            let assets = await supabase
+                .from('assets')
+                .select('*')
+                .ilike('description', `%${ip}%`);
         }
 
         // Process each vulnerability

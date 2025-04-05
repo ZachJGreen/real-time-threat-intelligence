@@ -65,7 +65,6 @@ export default {
   data() {
     return {
       showDashboard: false,
-      threatLogs: [],
       averageRiskScore: 0, 
       realTimeAlerts: [], 
       threats: JSON.parse(threatData), // data for prioritized threats
@@ -80,7 +79,7 @@ export default {
     async fetchData() {
       try {
           console.log('Fetching data from backend...');
-          const response = await axios.get('http://localhost:3000/getThreatData');
+          const response = await axios.get('http://localhost:5000/api/getThreatData');
           console.log('Data fetched:', response.data);
           
           this.threatLogs = response.data;
