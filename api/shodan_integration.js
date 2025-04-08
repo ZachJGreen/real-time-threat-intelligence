@@ -1,28 +1,52 @@
-require('dotenv').config();
+require('dotenv').config({ path: '../../.env'});
 const express = require('express');
 const axios = require('axios');
-const { Pool } = require('pg');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
+app.use(express.json());
 
-// Load API key from environment variables
+// Supabase configuration
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Shodan API key
 const SHODAN_API_KEY = process.env.SHODAN_API_KEY;
 
-// PostgreSQL database configuration
-const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'threat_intelligence_db',
-    port: 5432,
-    password: '12345', 
-});
 
 // Function to fetch data from Shodan API
 const getShodanData = async (ip) => {
     try {
+        // Check cache first
+        const { data: cachedData, error: cacheError } = await supabase
+            .from('api_cache')
+            .select('response, expires_at')
+            .eq('api_type', 'shodan')
+            .eq('query_key', ip)
+            .single();
+
+        if (cachedData && !cacheError && new Date(cachedData.expires_at) > new Date()) {
+            console.log(`Using cached Shodan data for ${ip}`);
+            return cachedData.response;
+        }
+
+        // Make API call if no valid cache
         const url = `https://api.shodan.io/shodan/host/${ip}?key=${SHODAN_API_KEY}`;
         const response = await axios.get(url);
+        
+        // Store in cache
+        const expiryTime = new Date();
+        expiryTime.setHours(expiryTime.getHours() + 6); // Cache for 6 hours
+        
+        await supabase.from('api_cache').upsert({
+            api_type: 'shodan',
+            query_key: ip,
+            response: response.data,
+            expires_at: expiryTime.toISOString()
+        });
+        
         return response.data;
     } catch (error) {
         console.error(`Error fetching Shodan data: ${error.message}`);
@@ -30,16 +54,41 @@ const getShodanData = async (ip) => {
     }
 };
 
-// Function to store data in PostgreSQL
-const storeData = async (ip, ports, services) => {
+// Function to store data in Supabase
+const storeData = async (ip, data) => {
     try {
-        const client = await pool.connect();
-        const query = `
-            INSERT INTO threat_data (ip_address, ports, services)
-            VALUES ($1, $2, $3)
-        `;
-        await client.query(query, [ip, JSON.stringify(ports), JSON.stringify(services)]);
-        client.release();
+        // Extract the relevant data
+        const ports = data.ports || [];
+        const services = {};
+        
+        if (data.data) {
+            data.data.forEach(service => {
+                if (service.port && service.transport) {
+                    services[service.port] = service.transport;
+                }
+            });
+        }
+        
+        const hostnames = data.hostnames || [];
+        const vulns = data.vulns || {};
+        
+        // Store in threat_data table
+        const { error } = await supabase
+            .from('threat_data')
+            .upsert({
+                ip_address: ip,
+                ports: ports,
+                services: services,
+                hostnames: hostnames,
+                vulns: vulns,
+                last_scan: new Date().toISOString(),
+                raw_data: data
+            });
+
+        if (error) {
+            throw error;
+        }
+        
         return { message: `Data stored successfully for ${ip}` };
     } catch (error) {
         console.error(`Error storing data: ${error.message}`);
@@ -59,10 +108,7 @@ app.get('/shodan', async (req, res) => {
         return res.status(500).json({ error: "Failed to fetch data from Shodan" });
     }
 
-    const ports = shodanData.ports || [];
-    const services = shodanData.hostnames || [];
-
-    const result = await storeData(ip, ports, services);
+    const result = await storeData(ip, shodanData);
     res.json(result);
 });
 
@@ -70,3 +116,5 @@ app.get('/shodan', async (req, res) => {
 app.listen(port, () => {
     console.log(`Shodan API server running on http://localhost:${port}`);
 });
+
+module.exports = { getShodanData, storeData };
