@@ -145,6 +145,7 @@
             </tbody>
           </table>
         </div>
+        
       </div>
     </div>
     
@@ -646,5 +647,31 @@ h3 {
     margin-bottom: 10px;
     text-align: left;
   }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #f9f9f9;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.text-red-500 {
+  color: red;
 }
 </style>
