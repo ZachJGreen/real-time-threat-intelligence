@@ -1,6 +1,71 @@
 # real-time-threat-intelligence
 
-	Project Overview
+##	Week-by-Week Updates
+
+Week 6 — *Deadline: 30 March 2025*
+
+| Task                              | Submission Path                      |
+|-----------------------------------|--------------------------------------|
+| Real-Time Alert System            | `NEED/src/alerts.py`                     |
+| Incident Response Mechanism       | `NEED/src/incident_response.py`          |
+| CBA Automation Script             | `NEED/src/cba_analysis.py`               |
+| Enhanced Threat Intelligence Dashboard | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`    |
+| API Optimization & Caching        | `NEED/src/api_optimizer.py`             |
+
+---
+
+Week 5 — *Deadline: 23 March 2025*
+
+| Task                                 | Submission Path                             |
+|--------------------------------------|---------------------------------------------|
+| LLM-Based Risk Scoring               | `NEED/src/risk_analysis.py`                     |
+| Updated TVA Mapping Script           | `NEED/db/tva_update.sql`                        |
+| Risk Prioritization Model            | `src/frontend/shopsmart-project/src/utils/risk_prioritization.js`               |
+| Automated Risk Mitigation Module     | `NEED/src/mitigation_recommendations.py`        |
+| Blue Teaming Response Module         | `NEED/src/incident_response.py`                 |
+
+---
+
+Week 4 — *Deadline: 16 March 2025*
+
+| Task                             | Submission Path                             |
+|----------------------------------|---------------------------------------------|
+| Backend API Integration          | `api/shodan_integration.js`               |
+| Threat Data Storage & Automation | `NEED/api/scheduler.py`                         |
+| Real-Time Dashboard UI           | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`        |
+| High-Risk Alert System           | `NEED/src/alerts.py`                            |
+| API Testing & Validation         | `NEED/tests/api_tests.py`                       |
+
+---
+
+Week 3 — *Deadline: 9 March 2025*
+
+| Task                                   | Submission Path                             |
+|----------------------------------------|---------------------------------------------|
+| Asset Inventory in Database            | `db/assets.sql`                            |
+| TVA Mapping Schema & Sample Data       | `db/tva_mapping.sql`                       |
+| Automated Threat Data Collection       | `api/fetch_osint.js`                       |
+| Risk Assessment Logic                  | `NEED/src/risk_analysis.py`                     |
+| Dashboard Display for TVA Mapping      | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`        |
+
+---
+
+Week 2 — *Deadline: 2 March 2025*
+
+| Task                             | Submission Path                             |
+|----------------------------------|---------------------------------------------|
+| Basic Web App Structure          | `src`                                     |
+| Database Schema                  | `db/schema.sql`       |
+| API Research Report              | `docs/api_research.md`                     |
+| OSINT API Integration Scripts    | `api`                                     |
+| Initial Dashboard UI             | `src/frontend/shopsmart-project/src/components`                          |
+
+---
+
+Let me know if you want this exported as a `.md` file or formatted for a GitHub wiki or documentation site.
+
+
+##	Project Overview
 
 The purpose of the "Real-time Threat Intelligence (RTTI)" system is to track and identify cybersecurity threats in real time. The system detects possible dangers and provides useful insights to reduce risks by utilizing a mix of machine learning algorithms, Open-Source Intelligence (OSINT) technologies, and external APIs. Through real-time analysis and processing of massive amounts of data, this research aims to enhance proactive cybersecurity measures.
 
