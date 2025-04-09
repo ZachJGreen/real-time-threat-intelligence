@@ -45,7 +45,7 @@ Week 3 — *Deadline: 9 March 2025*
 | Asset Inventory in Database            | `db/assets.sql`                            |
 | TVA Mapping Schema & Sample Data       | `db/tva_mapping.sql`                       |
 | Automated Threat Data Collection       | `api/fetch_osint.js`                       |
-| Risk Assessment Logic                  | `NEED/src/risk_analysis.py`                     |
+| Risk Assessment Logic                  | `/src/backend/utils.js`                     |
 | Dashboard Display for TVA Mapping      | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`        |
 
 ---
