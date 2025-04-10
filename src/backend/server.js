@@ -7,6 +7,8 @@ require("module").Module._initPaths();
 const express = require('express');
 const cors = require("cors");
 const { fetchShodanData } = require("../../api/fetch_osint");
+const { fetchAndStoreShodanData } = require("../../api/fetch_osint");
+
 const { Pool } = require('pg');
 
 require('dotenv').config();
