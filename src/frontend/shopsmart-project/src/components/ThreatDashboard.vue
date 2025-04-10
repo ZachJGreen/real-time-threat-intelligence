@@ -117,6 +117,14 @@
             <option value="">All Assets</option>
             <option v-for="asset in uniqueAssets" :key="asset">{{ asset }}</option>
           </select>
+          <download-csv
+	class   = "btn btn-default"
+	:data   =JSON.stringify(filteredThreatLogs)
+	name    = "filename.csv">
+
+	Generate CSV
+
+</download-csv>
         </div>
         
         <div class="table-container">
@@ -194,13 +202,17 @@
 import axios from 'axios';
 import CostBenefitAnalysis from './CostBenefitAnalysis.vue';
 import { threatData, threatLogData } from "../utils/risk_prioritization";
+import JsonCSV from 'vue-json-csv'
 
 export default {
   components: {
+    downloadCsv:JsonCSV,
     CostBenefitAnalysis
   },
   data() {
+    
     return {
+      
       activeTab: 'overview',
       showDashboard: true,
       averageRiskScore: 0,
