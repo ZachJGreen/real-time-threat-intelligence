@@ -118,11 +118,16 @@
             <option v-for="asset in uniqueAssets" :key="asset">{{ asset }}</option>
           </select>
           <download-csv
-	class   = "btn btn-default"
+	class   = "threat-download-csv"
 	:data   =JSON.stringify(filteredThreatLogs)
-	name    = "filename.csv">
+	name    = "Threat.csv">
 
-	Generate CSV
+	<v-btn
+color="info"
+dark
+tile
+elevation="0"
+>Generate CSV</v-btn>
 
 </download-csv>
         </div>
@@ -685,5 +690,8 @@ tr:hover {
 
 .text-red-500 {
   color: red;
+}
+.threat-download-csv {
+    margin-left: 8px;
 }
 </style>
