@@ -267,6 +267,30 @@ app.get("/api/cbaHistory", async (req, res) => {
   }
 });
 
+const { getIncidentResponsePlan } = require("incident_response");
+
+app.get("/api/incidentResponse", (req, res) => {
+    const { threatType } = req.query;
+    if (!threatType) {
+        return res.status(400).json({ error: "Missing threatType parameter" });
+    }
+
+    const plan = getIncidentResponsePlan(threatType);
+    res.json({ threatType, responsePlan: plan });
+});
+
+//Optional Supabase connection
+/**
+const supabase = require("./supabase"); // path to your configured client
+
+// Inside the route:
+await supabase.from('incident_logs').insert({
+    threat_type: threatType,
+    response_plan: plan.join("\n"),
+    created_at: new Date().toISOString()
+});
+ */
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

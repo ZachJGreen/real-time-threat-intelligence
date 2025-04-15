@@ -1,120 +1,255 @@
+// /src/backend/risk_analysis.js
+
+require('dotenv').config();
+const axios = require('axios');
+
 /**
- * Cost-Benefit Analysis module for risk treatment decisions
- * Compares the cost of security measures against potential loss reduction
+ * Sleep for a specified number of milliseconds
+ * @param {number} ms - Milliseconds to sleep
+ * @returns {Promise} - Resolves after specified time
  */
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Calculate ALE (Annual Loss Expectancy)
-function calculateALE(assetValue, aro) {
-    // ALE = Asset Value × ARO (Annual Rate of Occurrence)
-    return assetValue * aro;
-}
+/**
+ * Analyze cybersecurity risk using Hugging Face's inference API
+ * @param {string} threat - The name of the threat
+ * @param {number} likelihood - Likelihood score (1–5)
+ * @param {number} impact - Impact score (1–5)
+ * @param {string} model - Hugging Face model ID (default: 'HuggingFaceH4/zephyr-7b-beta')
+ * @returns {Promise<Object>} - Risk assessment with score and explanation
+ */
+async function analyzeRisk(threat, likelihood, impact, model = 'HuggingFaceH4/zephyr-7b-beta') {
+    // Input validation
+    if (!threat || typeof threat !== 'string') {
+        throw new Error('Threat must be a non-empty string');
+    }
 
-// Calculate cost-benefit ratio
-function calculateCBA(alePrior, alePost, securityControlCost) {
-    // Benefit = Reduction in expected loss
-    const benefit = alePrior - alePost;
-    
-    // Cost = Annual cost of security control
-    const cost = securityControlCost;
-    
-    // Return on Security Investment (ROSI)
-    const rosi = ((benefit - cost) / cost) * 100;
-    
-    return {
-        initialRisk: alePrior,
-        residualRisk: alePost,
-        riskReduction: benefit,
-        controlCost: cost,
-        netBenefit: benefit - cost,
-        rosi: rosi,
-        recommendation: rosi > 0 ? 'Implement control' : 'Reconsider control'
-    };
-}
+    if (!Number.isInteger(likelihood) || likelihood < 1 || likelihood > 5) {
+        throw new Error('Likelihood must be an integer between 1 and 5');
+    }
 
-// Evaluates multiple security controls to find optimal solution
-async function evaluateSecurityControls(threatId, assetValue, controls) {
+    if (!Number.isInteger(impact) || impact < 1 || impact > 5) {
+        throw new Error('Impact must be an integer between 1 and 5');
+    }
+
+    // Calculate the raw risk score
+    const rawScore = likelihood * impact;
+
     try {
-        const results = [];
-        
-        for (const control of controls) {
-            const alePrior = calculateALE(assetValue, control.riskBefore);
-            const alePost = calculateALE(assetValue, control.riskAfter);
-            
-            results.push({
-                controlName: control.name,
-                ...calculateCBA(alePrior, alePost, control.annualCost),
-                description: control.description
-            });
+        // Use the Hugging Face Inference API with axios
+        const HF_API_KEY = process.env.HF_API_KEY || ''; // Hugging Face API key from .env
+        const API_URL = `https://api-inference.huggingface.co/models/${model}`;
+
+        const prompt = `<s>[INST] 
+You are a cybersecurity risk analyst. 
+
+Based on best practices, assess the risk of the following threat:
+
+- Threat: ${threat}
+- Likelihood: ${likelihood} (1 = Low, 5 = High)
+- Impact: ${impact} (1 = Low, 5 = High)
+
+Calculate the risk score using:  
+**Risk Score = Likelihood × Impact** (Max = 25)
+
+Then respond with:
+1. Final Risk Score
+2. Risk Level (e.g., Low, Medium, High, Critical)
+3. Short explanation of the threat's impact
+4. Recommended mitigation actions
+
+Be concise and use bullet points if helpful.
+[/INST]</s>
+`;
+
+        const response = await axios.post(API_URL,
+            {
+                inputs: prompt,
+                parameters: {
+                    max_new_tokens: 300,
+                    temperature: 0.3,
+                    return_full_text: false
+                }
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${HF_API_KEY}`,
+                    'Content-Type': 'application/json',
+                }
+            }
+        );
+
+        // Extract the generated text from the response
+        const result = response.data;
+        let analysisText = '';
+
+        if (Array.isArray(result) && result.length > 0) {
+            analysisText = result[0].generated_text;
+        } else if (result.generated_text) {
+            analysisText = result.generated_text;
+        } else {
+            // Handle other response formats
+            analysisText = JSON.stringify(result);
         }
-        
-        // Sort by ROSI (Return on Security Investment)
-        return results.sort((a, b) => b.rosi - a.rosi);
+
+        // Clean up the text
+        analysisText = cleanAnalysisText(analysisText);
+
+        // Determine risk level based on score
+        let riskLevel;
+        if (rawScore <= 5) riskLevel = "Low";
+        else if (rawScore <= 12) riskLevel = "Medium";
+        else if (rawScore <= 19) riskLevel = "High";
+        else riskLevel = "Critical";
+
+        return {
+            threat,
+            likelihood,
+            impact,
+            rawScore,
+            riskLevel,
+            analysisText,
+            modelUsed: model
+        };
     } catch (error) {
-        console.error('Error evaluating security controls:', error);
-        throw error;
+        console.error("Error during risk analysis:", error);
+
+        // Handle model loading errors (common with free tier)
+        if (error.response && error.response.status === 503) {
+            console.warn("Model is loading. Retrying in 5 seconds...");
+            await sleep(5000);
+            return analyzeRisk(threat, likelihood, impact, model);
+        }
+
+        // Provide a basic fallback assessment if the API call fails
+        let riskLevel;
+        if (rawScore <= 5) riskLevel = "Low";
+        else if (rawScore <= 12) riskLevel = "Medium";
+        else if (rawScore <= 19) riskLevel = "High";
+        else riskLevel = "Critical";
+
+        return {
+            threat,
+            likelihood,
+            impact,
+            rawScore,
+            riskLevel,
+            analysisText: `${riskLevel} risk (${rawScore}/25). Failed to get detailed analysis.`,
+            modelUsed: "fallback",
+            error: true
+        };
     }
 }
 
-// Example security controls for specific threat types
-const securityControlsByThreatType = {
-    'SQL Injection': [
-        {
-            name: 'Web Application Firewall',
-            riskBefore: 0.3, // 30% chance per year
-            riskAfter: 0.05, // 5% chance per year
-            annualCost: 5000,
-            description: 'Implement a WAF to filter malicious SQL queries'
-        },
-        {
-            name: 'Parameterized Queries',
-            riskBefore: 0.3,
-            riskAfter: 0.02,
-            annualCost: 8000,
-            description: 'Refactor codebase to use parameterized queries and prevent SQL injection'
-        }
-    ],
-    'Phishing': [
-        {
-            name: 'Email Filtering Service',
-            riskBefore: 0.5,
-            riskAfter: 0.2,
-            annualCost: 3000,
-            description: 'Implement advanced email filtering to block phishing attempts'
-        },
-        {
-            name: 'Security Awareness Training',
-            riskBefore: 0.5,
-            riskAfter: 0.15,
-            annualCost: 7500,
-            description: 'Conduct regular security awareness training for all employees'
-        }
-    ],
-    'DDoS Attack': [
-        {
-            name: 'DDoS Protection Service',
-            riskBefore: 0.2,
-            riskAfter: 0.05,
-            annualCost: 12000,
-            description: 'Subscribe to a cloud-based DDoS protection service'
-        },
-        {
-            name: 'Load Balancer Implementation',
-            riskBefore: 0.2,
-            riskAfter: 0.1,
-            annualCost: 9000,
-            description: 'Implement load balancing to distribute traffic during attacks'
-        }
-    ]
-};
+/**
+ * Clean up the analysis text from Hugging Face
+ * @param {string} text - Raw text from the model
+ * @returns {string} - Cleaned text
+ */
+function cleanAnalysisText(text) {
+    if (!text) return '';
 
-// Get default controls for a threat if no custom controls provided
-function getDefaultControls(threatType) {
-    return securityControlsByThreatType[threatType] || [];
+    // Remove leading 'm' if it exists (common issue with some models)
+    if (text.startsWith('m ')) {
+        text = text.substring(2);
+    }
+
+    // Convert newline characters to actual line breaks
+    text = text.replace(/\\n/g, '\n');
+
+    // Remove any excessive whitespace
+    text = text.replace(/\s+/g, ' ').trim();
+
+    // Extract just the explanation part (skip the calculation part)
+    const parts = text.split('Risk score =');
+    if (parts.length > 1) {
+        // Find where the explanation starts after the calculations
+        const match = parts[parts.length - 1].match(/\d+\s*(.*)/);
+        if (match && match[1]) {
+            text = match[1].trim();
+        }
+    }
+
+    return text;
 }
 
-module.exports = {
-    calculateALE,
-    calculateCBA,
-    evaluateSecurityControls,
-    getDefaultControls
-};
+/**
+ * Format the risk analysis results into a clean, readable format
+ * @param {Object} result - Risk analysis result
+ * @returns {string} - Formatted output
+ */
+function formatRiskAnalysis(result) {
+    if (!result) return 'No analysis available';
+
+    return `
+THREAT: ${result.threat}
+RISK LEVEL: ${result.riskLevel} (${result.rawScore}/25)
+LIKELIHOOD: ${result.likelihood}/5 
+IMPACT: ${result.impact}/5
+
+ANALYSIS:
+${result.analysisText}
+`;
+}
+
+/**
+ * Batch process multiple risk analyses with rate limiting
+ * @param {Array<Object>} analyses - Array of {threat, likelihood, impact} objects
+ * @param {string} model - Hugging Face model ID
+ * @returns {Promise<Array>} - Results of all analyses
+ */
+async function batchAnalyzeRisks(analyses, model = 'HuggingFaceH4/zephyr-7b-beta') {
+    const results = [];
+
+    // Process one at a time with delay between requests
+    for (const analysis of analyses) {
+        try {
+            const result = await analyzeRisk(
+                analysis.threat,
+                analysis.likelihood,
+                analysis.impact,
+                model
+            );
+            results.push(result);
+
+            // Add delay between requests
+            await sleep(2000);
+        } catch (error) {
+            results.push({
+                threat: analysis.threat,
+                error: error.message,
+                failed: true
+            });
+        }
+    }
+
+    return results;
+}
+
+module.exports = { analyzeRisk, batchAnalyzeRisks, formatRiskAnalysis };
+
+// Test if run directly
+if (require.main === module) {
+    // Usage examples
+    console.log("Running test with Hugging Face model...");
+
+    analyzeRisk("SQL Injection", 4, 5)
+        .then(result => {
+            console.log(formatRiskAnalysis(result));
+        })
+        .catch(err => console.error(err.message));
+
+    // Uncomment to test batch analysis
+
+    batchAnalyzeRisks([
+        { threat: "SQL Injection", likelihood: 4, impact: 5 },
+        { threat: "Phishing Attack", likelihood: 5, impact: 4 },
+        { threat: "Unpatched Software", likelihood: 3, impact: 4 }
+    ]).then(results => {
+        results.forEach(result => {
+            console.log(formatRiskAnalysis(result));
+            console.log("-----------------------------------");
+        });
+    });
+
+}
