@@ -47,8 +47,8 @@ Week 7 — *Deadline: 6 April 2025*
 
 | Task                             | Submission Path                          |
 |----------------------------------|-------------------------------------------|
-| Updated Risk Scoring Model(Luis)       | `NEED/src/risk_scoring.py`                    |
-| Threat Report Generator(Luis)          | `NEED/src/report_generator.py`                |
+| Updated Risk Scoring Model       | `src/backend/risk_scoring.js`                    |
+| Threat Report Generator          | `src/backend/report_generator.js`                |
 | Security Audit Report(Zach)            | `NEED/docs/security_audit.md`                |
 | Threat Event Logging System(Maisha)      | `NEED/src/logging.py`                         |
 | Optimized Database Queries(Hallee)       | `NEED/db/optimized_queries.sql`              |
