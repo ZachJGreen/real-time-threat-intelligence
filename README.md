@@ -2,13 +2,64 @@
 
 ##	Week-by-Week Updates
 
+Week 10 — *Deadline: 27 April 2025* 
+
+| Task                          | Submission Path                      |
+|-------------------------------|---------------------------------------|
+| Final Project Report          | `NEED/docs/final_project_report.pdf`     |
+| Final Presentation Slides     | `NEED/docs/final_presentation.pptx`      |
+| Final System Demonstration *(optional)* | `NEED/docs/final_demo.mp4`           |
+| System Walkthrough Guide      | `NEED/docs/system_walkthrough.md`        |
+| Final Git Repository Update   | `/README.md`                         |
+
+---
+
+Week 9 — *Deadline: 20 April 2025*
+
+| Task                                 | Submission Path                                                        |
+|--------------------------------------|-------------------------------------------------------------------------|
+| Security Validation Report           | `NEED/docs/security_validation.md`                                         |
+| Performance Test Results             | `NEED/docs/performance_testing.md`                                         |
+| Optimized Database Queries           | `NEED/db/query_optimizations.sql`                                          |
+| Deployment Checklist & Production Setup | `NEED/docs/deployment_checklist.md`                                    |
+| Peer Review Report & Issue Tracking  | `NEED/docs/peer_review.md`, `/docs/issue_tracking.md`                     |
+| Troubleshooting & Maintenance Guide  | `NEED/docs/troubleshooting_guide.md`                                       |
+
+---
+
+Week 8 — *Deadline: 13 April 2025*
+
+| Task                                | Submission Path                          |
+|-------------------------------------|-------------------------------------------|
+| Automated Defensive Response Script | `NEED/src/blue_team_defense.py`              |
+| AI-Powered Threat Hunting           | `NEED/src/ai_threat_hunting.py`              |
+| Automated Threat Mitigation System | `NEED/src/threat_mitigation.py`              |
+| Complete System Documentation       | `NEED/docs/system_manual.md`                 |
+| User Guide for Analysts             | `NEED/docs/user_guide.md`                    |
+| API Documentation                   | `NEED/docs/api_documentation.yaml`           |
+
+---
+
+
+Week 7 — *Deadline: 6 April 2025*
+
+| Task                             | Submission Path                          |
+|----------------------------------|-------------------------------------------|
+| Updated Risk Scoring Model       | `NEED/src/risk_scoring.py`                    |
+| Threat Report Generator          | `NEED/src/report_generator.py`                |
+| Security Audit Report            | `NEED/docs/security_audit.md`                |
+| Threat Event Logging System      | `NEED/src/logging.py`                         |
+| Optimized Database Queries       | `NEED/db/optimized_queries.sql`              |
+
+--- 
+
 Week 6 — *Deadline: 30 March 2025*
 
 | Task                              | Submission Path                      |
 |-----------------------------------|--------------------------------------|
 | Real-Time Alert System            | `NEED/src/alerts.py`                     |
 | Incident Response Mechanism       | `NEED/src/incident_response.py`          |
-| CBA Automation Script             | `NEED/src/cba_analysis.py`               |
+| CBA Automation Script             | `src/backend/cba_analysis.js`               |
 | Enhanced Threat Intelligence Dashboard | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`    |
 | API Optimization & Caching        | `NEED/src/api_optimizer.py`             |
 
@@ -59,10 +110,6 @@ Week 2 — *Deadline: 2 March 2025*
 | API Research Report              | `docs/api_research.md`                     |
 | OSINT API Integration Scripts    | `api`                                     |
 | Initial Dashboard UI             | `src/frontend/shopsmart-project/src/components`                          |
-
----
-
-Let me know if you want this exported as a `.md` file or formatted for a GitHub wiki or documentation site.
 
 
 ##	Project Overview
