@@ -1,4 +1,6 @@
-# real-time-threat-intelligence
+# Real-time Threat Intelligence
+
+[Jump to Project Overview](#project-overview)
 
 ##	Week-by-Week Updates
 
@@ -22,7 +24,7 @@ Week 9 — *Deadline: 20 April 2025*
 | Performance Test Results             | `NEED/docs/performance_testing.md`                                         |
 | Optimized Database Queries           | `NEED/db/query_optimizations.sql`                                          |
 | Deployment Checklist & Production Setup | `NEED/docs/deployment_checklist.md`                                    |
-| Peer Review Report & Issue Tracking  | `NEED/docs/peer_review.md`, `/docs/issue_tracking.md`                     |
+| Peer Review Report & Issue Tracking  | `NEED/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
 | Troubleshooting & Maintenance Guide  | `/docs/troubleshooting_guide.md`                                       |
 
 ---
@@ -112,61 +114,86 @@ Week 2 — *Deadline: 2 March 2025*
 | Initial Dashboard UI             | `src/frontend/shopsmart-project/src/components`                          |
 
 
-##	Project Overview
+## Project Overview
 
-The purpose of the "Real-time Threat Intelligence (RTTI)" system is to track and identify cybersecurity threats in real time. The system detects possible dangers and provides useful insights to reduce risks by utilizing a mix of machine learning algorithms, Open-Source Intelligence (OSINT) technologies, and external APIs. Through real-time analysis and processing of massive amounts of data, this research aims to enhance proactive cybersecurity measures.
+The **Real-time Threat Intelligence (RTTI)** system is designed to track and identify cybersecurity threats in real time. By leveraging a combination of machine learning algorithms, Open-Source Intelligence (OSINT) technologies, and external APIs, the system detects potential risks and provides actionable insights. This allows for proactive threat mitigation through dynamic analysis of large-scale data.
+
+---
 
 ## Key Features
-	Real-time threat monitoring and detection
-	Integration with external OSINT APIs (Shodan, Have I Been Pwned, VirusTotal)
-	Dynamic risk scoring powered by a Large Language Model (LLM)
-	Interactive user interface for real-time intelligence display
-	Data-driven risk assessment and mitigation suggestions
+
+- Real-time threat monitoring and detection  
+- Integration with external OSINT APIs: Shodan, Have I Been Pwned, VirusTotal  
+- Dynamic risk scoring powered by a Large Language Model (LLM)  
+- Interactive user interface for displaying real-time intelligence  
+- Data-driven risk assessment and mitigation recommendations  
+
+---
 
 ## Technologies Used
-	Back-End: Node.js for server-side development
-	Front-End: Vue.js for dynamic and responsive user interfaces
-	Database: PostgreSQL for structured data storage
-	OSINT Tools: Shodan, Have I Been Pwned, VirusTotal
-	Machine Learning: Large Language Model (LLM) for risk scoring
 
+- **Back-End:** Node.js  
+- **Front-End:** Vue.js  
+- **Database:** PostgreSQL  
+- **OSINT Tools:** Shodan, Have I Been Pwned, VirusTotal  
+- **Machine Learning:** LLM for automated risk scoring  
 
-	Team Members and Responsibilities
+---
 
-o	Project Manager: Morgan Sansone  
-	Oversees project workflow, ensures deadlines are met, and coordinates team efforts.
+## Team Members and Responsibilities
 
-o	OSINT Specialist: Zach Green  
-	Researches and integrates OSINT tools and APIs for threat intelligence.
+- **Morgan Sansone** – *Project Manager*  
+  Oversees workflow, ensures deadlines are met, and coordinates the team.  
 
-o	Risk Analyst: Luis Sanchez  
-	Conducts threat and vulnerability assessments, risk mapping, and mitigation planning.
+- **Zach Green** – *OSINT Specialist*  
+  Integrates and manages external OSINT tools and APIs.  
 
-o	Developer: Maisha Islam  
-	Implements back-end and front-end functionality for the RTTI system.
+- **Luis Sanchez** – *Risk Analyst*  
+  Performs threat assessments, risk mapping, and develops mitigation strategies.  
 
-o	Documentation Lead: Hallee Pham  
-	Manages project documentation, ensures clarity, and maintains version control.
+- **Maisha Islam** – *Developer*  
+  Develops and integrates back-end and front-end components.  
 
+- **Hallee Pham** – *Documentation Lead*  
+  Maintains project documentation and version control.  
 
-	Installation
+---
 
+## Installation
 
-Prerequisites
-	Node.js
-	Vue.js
-	PostgreSQL
-	Access to OSINT API keys (Shodan, Have I Been Pwned, VirusTotal)
+### Prerequisites
 
-Steps to Run the Project
+- Node.js  
+- Vue.js  
+- PostgreSQL  
+- Access to OSINT API keys (Shodan, Have I Been Pwned, VirusTotal)  
 
-1.	First of all clone this repository
+---
 
-2.	Install dependencies
+### Steps to Run the Project
 
-3.	Set up the PostgreSQL database
+1. **Clone the repository**
 
-4.	Set up the PostgreSQL database
+   ```bash
+   git clone https://github.com/your-username/real-time-threat-intelligence.git
+   cd real-time-threat-intelligence
+   ```
 
-5.	Start the application 
+2. **Install dependencies**
 
+   ```bash
+   npm install
+   ```
+
+3. **Set up the PostgreSQL database**  
+   - Create the database.  
+   - Configure the database connection in your environment file.
+
+4. **Add API Keys**  
+   - Add your Shodan, HIBP, and VirusTotal API keys to your environment configuration.
+
+5. **Start the application**
+
+   ```bash
+   npm run serve
+   ```
