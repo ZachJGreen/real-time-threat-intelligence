@@ -2,6 +2,8 @@ require('dotenv').config({ path: '../../.env'});
 const express = require('express');
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
+const { handleThreat } = require('../src/backend/alerts.js');
+
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -109,6 +111,18 @@ app.get('/shodan', async (req, res) => {
     }
 
     const result = await storeData(ip, shodanData);
+
+    const numberOfPorts = shodanData.ports ? shodanData.ports.length : 0;
+    const hasVulnerabilities = shodanData.vulns && Object.keys(shodanData.vulns).length > 0;
+
+    const riskScore = numberOfPorts * 2 + (hasVulnerabilities ? 30 : 0);
+
+    if (riskScore > 20) {
+        handleThreat({
+            name: `High Risk Threat for ${ip}`,
+            riskScore: riskScore,
+        });
+    }
     res.json(result);
 });
 

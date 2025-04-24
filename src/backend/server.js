@@ -1,4 +1,6 @@
 require('dotenv').config({ path: '../../.env'});
+const cors = require("cors");
+
 
 // Ensure Node.js looks for modules in the backend folder
 process.env.NODE_PATH = __dirname + "/node_modules";
@@ -14,7 +16,10 @@ const { Pool } = require('pg');
 require('dotenv').config();
 
 const app = express();
-app.use(cors({ origin: "*" })); // Allow all origins (for debugging)
+app.use(cors({
+    origin: "*", // allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allow all HTTP methods
+  }));  
 app.use(express.json());
 
 
@@ -88,6 +93,7 @@ app.get("/getThreatData", async (req, res) => {
 
 app.get("/api/getThreatData", async (req, res) => {
   try {
+    console.log("🔄 Received frontend request for threat data");
     // Fetch TVA mapping data from Supabase
     const { data: tvaData, error: tvaError } = await supabase
       .from('tva_mapping')

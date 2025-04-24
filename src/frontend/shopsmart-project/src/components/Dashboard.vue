@@ -14,6 +14,7 @@
 <script>
 import ThreatDashboard from "./ThreatDashboard.vue";
 import axios from "axios";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "Dashboard",
@@ -24,6 +25,7 @@ export default {
     return {
       showDashboard: false,
       alerts: [],
+      toast: useToast(),
     };
   },
   methods: {
@@ -45,13 +47,16 @@ export default {
             riskScore: threat.riskScore,
             message: "Critical Threat Detected!",
           });
-          alert(`🚨 Email/Webhook sent for ${threat.name}`);
+          this.toast.success(`🚨 Webhook sent for ${threat.name}`, {
+            timeout: 5000,
+        }); 
       } catch (error) {
-          console.error("Error sending alert:", error.response || error.message);
-          alert("There was an error sending the alert. Check the console for details.");
+        console.error("Error sending alert:", error.response || error.message);
+        this.toast.error("❌ Failed to send alert. Check console for details.", {
+          timeout: 6000,
+        });
       }
-
-    },
+    }
   },
   mounted() {
     // Simulating new threats every 5 seconds

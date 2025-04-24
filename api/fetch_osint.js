@@ -1,6 +1,7 @@
 
 const { createClient } = require('@supabase/supabase-js');
 const { fetchShodanData } = require("./shodan");
+import { handleThreat } from '../src/backend/alerts.js';
 const { sendEmailAlert } = require('../src/backend/alerts');
 
 // Supabase configuration
@@ -216,6 +217,17 @@ async function processVulnerabilities(ip, vulns) {
                 if (tvaError) {
                     throw new Error(`Error creating TVA mapping: ${tvaError.message}`);
                 }
+
+                // Handle the threat based on risk score
+                const riskScore = likelihood * impact;
+                if (riskScore > 20) {
+                    handleThreat({
+                        name: `High-Risk Vulnerability: ${cveId}`,
+                        riskScore: riskScore,
+                    });
+                }
+
+
             }
         }
         
