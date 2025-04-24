@@ -1,7 +1,16 @@
-<!-- Threat Dashboard Vue Component -->
 <template>
   <div class="threat-dashboard">
     <h2>Threat Intelligence Dashboard</h2>
+    
+    <!-- Error message display -->
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+    
+    <!-- Loading indicator -->
+    <div v-if="loading" class="loading-indicator">
+      Loading threat data...
+    </div>
     
     <!-- Add tabs for different dashboard views -->
     <div class="dashboard-tabs">
@@ -118,18 +127,15 @@
             <option v-for="asset in uniqueAssets" :key="asset">{{ asset }}</option>
           </select>
           <download-csv
-	class   = "threat-download-csv"
-	:data   =JSON.stringify(filteredThreatLogs)
-	name    = "Threat.csv">
-
-	<v-btn
-color="info"
-dark
-tile
-elevation="0"
->Generate CSV</v-btn>
-
-</download-csv>
+            :data="filteredThreatLogs"
+            :fields="csvFields"
+            name="Threat_Data.csv"
+            class="threat-download-csv"
+          >
+            <v-btn color="info" dark tile elevation="0">
+              Generate CSV
+            </v-btn>
+          </download-csv>
         </div>
         
         <div class="table-container">
@@ -158,13 +164,11 @@ elevation="0"
             </tbody>
           </table>
         </div>
-        
       </div>
     </div>
     
     <!-- Risk Analysis Tab -->
     <div v-if="activeTab === 'analysis'" class="dashboard-content">
-      <!-- Include Cost-Benefit Analysis Component -->
       <CostBenefitAnalysis :threats="threatLogs" />
     </div>
     
@@ -211,13 +215,11 @@ import JsonCSV from 'vue-json-csv'
 
 export default {
   components: {
-    downloadCsv:JsonCSV,
+    downloadCsv: JsonCSV,
     CostBenefitAnalysis
   },
   data() {
-    
     return {
-      
       activeTab: 'overview',
       showDashboard: true,
       averageRiskScore: 0,
@@ -226,11 +228,21 @@ export default {
       alerts: [],
       threatFilter: '',
       assetFilter: '',
+      loading: false,
+      errorMessage: null,
       recentActivities: [
         { time: new Date(Date.now() - 25 * 60000), text: 'New vulnerability detected: CVE-2023-1234' },
         { time: new Date(Date.now() - 55 * 60000), text: 'System scan completed' },
         { time: new Date(Date.now() - 125 * 60000), text: 'Alert: Suspicious login attempt' }
-      ]
+      ],
+      csvFields: {
+        'threat_name': 'Threat',
+        'asset_name': 'Asset',
+        'vulnerability_name': 'Vulnerability',
+        'likelihood': 'Likelihood',
+        'impact': 'Impact',
+        'risk_score': 'Risk Score'
+      }
     };
   },
   computed: {
@@ -265,24 +277,29 @@ export default {
   },
   methods: {
     async fetchData() {
+      this.loading = true;
+      this.errorMessage = null;
+      
       try {
         console.log('Fetching threat data...');
         const response = await axios.get('http://localhost:5000/api/getThreatData');
         this.threatLogs = response.data;
         
-        // Calculate average risk score
         const totalRiskScore = this.threatLogs.reduce((sum, log) => sum + log.risk_score, 0);
         this.averageRiskScore = (totalRiskScore / Math.max(this.threatLogs.length, 1)).toFixed(2);
         
-        // Fetch alerts
         const alertsResponse = await axios.get('http://localhost:5000/api/getRecentAlerts');
         this.alerts = alertsResponse.data;
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Use sample data if API fails
+        this.errorMessage = "Failed to fetch threat data. Using sample data.";
+        
+        // Use sample data as fallback
         this.threatLogs = JSON.parse(threatLogData);
         const totalRiskScore = this.threatLogs.reduce((sum, log) => sum + log.risk_score, 0);
         this.averageRiskScore = (totalRiskScore / this.threatLogs.length).toFixed(2);
+      } finally {
+        this.loading = false;
       }
     },
     getRiskClass(score) {
@@ -301,13 +318,11 @@ export default {
     },
     formatTime(timestamp) {
       if (!timestamp) return 'N/A';
-      
       const date = new Date(timestamp);
       return date.toLocaleString();
     },
     analyzeRisk(threat) {
       this.activeTab = 'analysis';
-      // You can implement additional logic to pre-select this threat in the CBA component
     },
     async acknowledgeAlert(alert) {
       try {
@@ -345,7 +360,9 @@ export default {
     }, 30000);
   },
   beforeUnmount() {
-    clearInterval(this.dataInterval);
+    if (this.dataInterval) {
+      clearInterval(this.dataInterval);
+    }
   }
 };
 </script>
@@ -363,6 +380,23 @@ body {
   margin: 0 auto;
   padding: 20px;
   background-color: #f0f4f8; /* Light blue-gray background */
+}
+
+.error-message {
+  background-color: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.loading-indicator {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #4a5568;
 }
 
 h2 {
@@ -557,6 +591,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+  align-items: center;
 }
 
 .filter-input, 
@@ -650,6 +685,14 @@ h3 {
   font-weight: 600;
 }
 
+.table-container {
+  overflow-x: auto;
+}
+
+.threat-download-csv {
+  margin-left: 8px;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .dashboard-cards {
@@ -663,6 +706,17 @@ h3 {
   .dashboard-tabs button {
     margin-bottom: 10px;
     text-align: left;
+  }
+
+  .filter-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-input {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
   }
 }
 
@@ -690,8 +744,5 @@ tr:hover {
 
 .text-red-500 {
   color: red;
-}
-.threat-download-csv {
-    margin-left: 8px;
 }
 </style>
