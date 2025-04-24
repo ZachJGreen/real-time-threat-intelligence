@@ -24,6 +24,7 @@
     "nodemailer": "^6.10.0",
     "open": "^10.1.0",
     "openai": "^4.94.0",
+    "pdfkit": "^0.17.0",
     "pg": "^8.7.1"
   },
   "devDependencies": {

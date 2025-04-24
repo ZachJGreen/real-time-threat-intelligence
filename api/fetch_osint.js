@@ -3,6 +3,7 @@ const { createClient } = require('@supabase/supabase-js');
 const { fetchShodanData } = require("./shodan");
 import { handleThreat } from '../src/backend/alerts.js';
 const { sendEmailAlert } = require('../src/backend/alerts');
+const { calculateRiskScore } = require('../src/backend/risk_scoring');
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -202,6 +203,12 @@ async function processVulnerabilities(ip, vulns) {
                 }
                  */
 
+                // Calculate dynamic risk score
+
+                const lastSeen = new Date(); // Current scan time
+
+                const riskScore = calculateRiskScore(likelihood, impact, lastSeen);
+
                 // Insert or update TVA mapping
                 const { error: tvaError } = await supabase
                     .from('tva_mapping')
@@ -211,6 +218,7 @@ async function processVulnerabilities(ip, vulns) {
                         vulnerability_id: vulnId,
                         likelihood: likelihood,
                         impact: impact,
+                        risk_score: riskScore,
                         last_updated: new Date().toISOString()
                     });
 

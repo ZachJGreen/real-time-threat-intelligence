@@ -12,7 +12,7 @@ const app = express();
 app.use(cors({
     origin: "*", // allow all origins
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allow all HTTP methods
-  }));  
+  }));
 app.use(express.json());
 
 // Initialize supabase
@@ -156,7 +156,7 @@ app.get("/api/getRecentAlerts", async (req, res) => {
 app.post("/api/updateAlertStatus", async (req, res) => {
     try {
         const { id, status } = req.body;
-        
+
         if (!id || !status) {
             return res.status(400).json({ error: "Missing required parameters" });
         }
