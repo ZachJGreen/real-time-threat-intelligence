@@ -23,7 +23,7 @@ Week 9 — *Deadline: 20 April 2025*
 | Optimized Database Queries           | `NEED/db/query_optimizations.sql`                                          |
 | Deployment Checklist & Production Setup | `NEED/docs/deployment_checklist.md`                                    |
 | Peer Review Report & Issue Tracking  | `NEED/docs/peer_review.md`, `/docs/issue_tracking.md`                     |
-| Troubleshooting & Maintenance Guide  | `NEED/docs/troubleshooting_guide.md`                                       |
+| Troubleshooting & Maintenance Guide  | `/docs/troubleshooting_guide.md`                                       |
 
 ---
 
