@@ -33,9 +33,8 @@ Week 8 — *Deadline: 13 April 2025*
 
 | Task                                | Submission Path                          |
 |-------------------------------------|-------------------------------------------|
-| Automated Defensive Response Script(Morgan) | `NEED/src/blue_team_defense.py`              |
-| AI-Powered Threat Hunting(Luis)
-| `NEED/src/ai_threat_hunting.py`              |
+| Automated Defensive Response Script(Zach) | `NEED/src/blue_team_defense.py`              |
+| AI-Powered Threat Hunting(Luis)   | `NEED/src/ai_threat_hunting.py`              |
 | Automated Threat Mitigation System(Maisha) | `NEED/src/threat_mitigation.py`              |
 | Complete System Documentation(Hallee)       | `NEED/docs/system_manual.md`                 |
 | User Guide for Analysts(Hallee)             | `NEED/docs/user_guide.md`                    |
