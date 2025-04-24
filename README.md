@@ -57,11 +57,11 @@ Week 6 — *Deadline: 30 March 2025*
 
 | Task                              | Submission Path                      |
 |-----------------------------------|--------------------------------------|
-| Real-Time Alert System            | `NEED/src/alerts.py`                     |
-| Incident Response Mechanism       | `NEED/src/incident_response.py`          |
+| Real-Time Alert System            | `src/backend/alerts.js`                     |
+| Incident Response Mechanism       | `src/backend/incident_response.js`          |
 | CBA Automation Script             | `src/backend/cba_analysis.js`               |
 | Enhanced Threat Intelligence Dashboard | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`    |
-| API Optimization & Caching        | `NEED/src/api_optimizer.py`             |
+| API Optimization & Caching        | `src/backend/api_optimizer.js`             |
 
 ---
 
@@ -69,11 +69,11 @@ Week 5 — *Deadline: 23 March 2025*
 
 | Task                                 | Submission Path                             |
 |--------------------------------------|---------------------------------------------|
-| LLM-Based Risk Scoring               | `NEED/src/risk_analysis.py`                     |
-| Updated TVA Mapping Script           | `NEED/db/tva_update.sql`                        |
+| LLM-Based Risk Scoring               | `src/backend/risk_analysis.js`                     |
+| Updated TVA Mapping Script           | `db/tva_update.sql`                        |
 | Risk Prioritization Model            | `src/frontend/shopsmart-project/src/utils/risk_prioritization.js`               |
-| Automated Risk Mitigation Module     | `NEED/src/mitigation_recommendations.py`        |
-| Blue Teaming Response Module         | `NEED/src/incident_response.py`                 |
+| Automated Risk Mitigation Module     | `src/backend/mitigation_recommendations.js`        |
+| Blue Teaming Response Module         | `src/backend/incident_response.js`                 |
 
 ---
 
@@ -82,10 +82,10 @@ Week 4 — *Deadline: 16 March 2025*
 | Task                             | Submission Path                             |
 |----------------------------------|---------------------------------------------|
 | Backend API Integration          | `api/shodan_integration.js`               |
-| Threat Data Storage & Automation | `/src/backend/utils.js`                         |
+| Threat Data Storage & Automation | `src/backend/utils.js`                         |
 | Real-Time Dashboard UI           | `src/frontend/shopsmart-project/src/components/ThreatDashboard.vue`        |
-| High-Risk Alert System           | `NEED/src/alerts.py`                            |
-| API Testing & Validation         | `NEED/tests/api_tests.py`                       |
+| High-Risk Alert System           | `src/backend/alerts.js`                            |
+| API Testing & Validation         | `src/backend/tests/api_tests.test.js`                       |
 
 ---
 
