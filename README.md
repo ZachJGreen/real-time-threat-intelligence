@@ -8,10 +8,10 @@ Week 10 — *Deadline: 27 April 2025*
 
 | Task                          | Submission Path                      |
 |-------------------------------|---------------------------------------|
-| Final Project Report          | `NEED/docs/final_project_report.pdf`     |
-| Final Presentation Slides     | `NEED/docs/final_presentation.pptx`      |
-| Final System Demonstration *(optional)* | `NEED/docs/final_demo.mp4`           |
-| System Walkthrough Guide      | `NEED/docs/system_walkthrough.md`        |
+| Final Project Report(Hallee)          | `NEED/docs/final_project_report.pdf`     |
+| Final Presentation Slides(Morgan)     | `NEED/docs/final_presentation.pptx`      |
+| Final System Demonstration *(optional)*(Together) | `NEED/docs/final_demo.mp4`           |
+| System Walkthrough Guide(Zach)      | `NEED/docs/system_walkthrough.md`        |
 | Final Git Repository Update   | `/README.md`                         |
 
 ---
@@ -20,11 +20,11 @@ Week 9 — *Deadline: 20 April 2025*
 
 | Task                                 | Submission Path                                                        |
 |--------------------------------------|-------------------------------------------------------------------------|
-| Security Validation Report           | `NEED/docs/security_validation.md`                                         |
-| Performance Test Results             | `NEED/docs/performance_testing.md`                                         |
-| Optimized Database Queries           | `NEED/db/query_optimizations.sql`                                          |
-| Deployment Checklist & Production Setup | `NEED/docs/deployment_checklist.md`                                    |
-| Peer Review Report & Issue Tracking  | `NEED/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
+| Security Validation Report(Maisha)           | `NEED/docs/security_validation.md`                                         |
+| Performance Test Results(Zach)             | `NEED/docs/performance_testing.md`                                         |
+| Optimized Database Queries(Hallee)           | `NEED/db/query_optimizations.sql`                                          |
+| Deployment Checklist & Production Setup(Morgan) | `NEED/docs/deployment_checklist.md`                                    |
+| Peer Review Report & Issue Tracking(Morgan)  | `NEED/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
 | Troubleshooting & Maintenance Guide  | `/docs/troubleshooting_guide.md`                                       |
 
 ---
@@ -33,12 +33,13 @@ Week 8 — *Deadline: 13 April 2025*
 
 | Task                                | Submission Path                          |
 |-------------------------------------|-------------------------------------------|
-| Automated Defensive Response Script | `NEED/src/blue_team_defense.py`              |
-| AI-Powered Threat Hunting           | `NEED/src/ai_threat_hunting.py`              |
-| Automated Threat Mitigation System | `NEED/src/threat_mitigation.py`              |
-| Complete System Documentation       | `NEED/docs/system_manual.md`                 |
-| User Guide for Analysts             | `NEED/docs/user_guide.md`                    |
-| API Documentation                   | `NEED/docs/api_documentation.yaml`           |
+| Automated Defensive Response Script(Morgan) | `NEED/src/blue_team_defense.py`              |
+| AI-Powered Threat Hunting(Luis)
+| `NEED/src/ai_threat_hunting.py`              |
+| Automated Threat Mitigation System(Maisha) | `NEED/src/threat_mitigation.py`              |
+| Complete System Documentation(Hallee)       | `NEED/docs/system_manual.md`                 |
+| User Guide for Analysts(Hallee)             | `NEED/docs/user_guide.md`                    |
+| API Documentation(Luis)                   | `NEED/docs/api_documentation.yaml`           |
 
 ---
 
@@ -47,11 +48,11 @@ Week 7 — *Deadline: 6 April 2025*
 
 | Task                             | Submission Path                          |
 |----------------------------------|-------------------------------------------|
-| Updated Risk Scoring Model       | `NEED/src/risk_scoring.py`                    |
-| Threat Report Generator          | `NEED/src/report_generator.py`                |
-| Security Audit Report            | `NEED/docs/security_audit.md`                |
-| Threat Event Logging System      | `NEED/src/logging.py`                         |
-| Optimized Database Queries       | `NEED/db/optimized_queries.sql`              |
+| Updated Risk Scoring Model(Luis)       | `NEED/src/risk_scoring.py`                    |
+| Threat Report Generator(Luis)          | `NEED/src/report_generator.py`                |
+| Security Audit Report(Zach)            | `NEED/docs/security_audit.md`                |
+| Threat Event Logging System(Maisha)      | `NEED/src/logging.py`                         |
+| Optimized Database Queries(Hallee)       | `NEED/db/optimized_queries.sql`              |
 
 --- 
 
