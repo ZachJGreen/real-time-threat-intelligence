@@ -9,7 +9,8 @@ import router from './router';
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { threatData } from './utils/risk_prioritization';  
-
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
 
 const vuetify = createVuetify({
     components,
@@ -22,5 +23,6 @@ const vuetify = createVuetify({
   const app = createApp(App)
   app.use(router)
   app.use(vuetify)
+  app.use(Toast)
   app.mount('#app')
   console.log(threatData);
