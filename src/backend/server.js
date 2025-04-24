@@ -57,7 +57,7 @@ app.get("/getThreatData", async (req, res) => {
       `;
       const dbData = await pool.query(query);
       
-      let shodanData = null;
+      let shodanData;
       try {
           // Make sure fetchShodanData is working correctly
           shodanData = await fetchShodanData("8.8.8.8");
@@ -267,7 +267,7 @@ app.get("/api/cbaHistory", async (req, res) => {
   }
 });
 
-const { getIncidentResponsePlan } = require("incident_response");
+const { getIncidentResponsePlan } = require("./incident_response");
 
 app.get("/api/incidentResponse", (req, res) => {
     const { threatType } = req.query;
