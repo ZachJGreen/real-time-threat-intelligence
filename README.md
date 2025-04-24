@@ -2,18 +2,6 @@
 
 [Jump to Project Overview](#project-overview)
 
-## Week Index
-- [Week 10 – Deadline: 27 April 2025](#week-10--deadline-27-april-2025)
-- [Week 9 – Deadline: 20 April 2025](#week-9--deadline-20-april-2025)
-- [Week 8 – Deadline: 13 April 2025](#week-8--deadline-13-april-2025)
-- [Week 7 – Deadline: 6 April 2025](#week-7--deadline-6-april-2025)
-- [Week 6 – Deadline: 30 March 2025](#week-6--deadline-30-march-2025)
-- [Week 5 – Deadline: 23 March 2025](#week-5--deadline-23-march-2025)
-- [Week 4 – Deadline: 16 March 2025](#week-4--deadline-16-march-2025)
-- [Week 3 – Deadline: 9 March 2025](#week-3--deadline-9-march-2025)
-- [Week 2 – Deadline: 2 March 2025](#week-2--deadline-2-march-2025)
-
-
 ##	Week-by-Week Updates
 
 Week 10 — *Deadline: 27 April 2025* 
