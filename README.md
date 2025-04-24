@@ -165,7 +165,7 @@ The **Real-time Threat Intelligence (RTTI)** system is designed to track and ide
 
 - Node.js  
 - Vue.js  
-- PostgreSQL  
+- PostgreSQL  (Supabase)
 - Access to OSINT API keys (Shodan, Have I Been Pwned, VirusTotal)  
 
 ---
