@@ -2,6 +2,7 @@
 const { createClient } = require('@supabase/supabase-js');
 const { fetchShodanData } = require("./shodan");
 import { handleThreat } from '../src/backend/alerts.js';
+const { sendEmailAlert } = require('../src/backend/alerts');
 
 // Supabase configuration
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -175,11 +176,32 @@ async function processVulnerabilities(ip, vulns) {
             for (const asset of assets) {
                 // Calculate likelihood based on vulnerability severity
                 const severity = Math.round(vulnInfo.cvss || 5);
+
+                //const severity = 10; // force max severity for testing
+
                 const likelihood = Math.min(5, Math.ceil(severity / 2));
                 
                 // Impact depends on asset criticality
                 const impact = asset.criticality || 3;
-                
+
+
+                /*
+                //ALERT EMAIL CALL
+                console.log(`[DEBUG] Risk Score = ${risk_score} for ${cveId} on ${asset.asset_name}`);
+
+                const risk_score = likelihood * impact;
+                if (risk_score > 20) {
+                    await sendEmailAlert(`CVE ${cveId} on ${asset.asset_name}`, risk_score);
+                }
+
+                try {
+                    await transporter.sendMail(mailOptions);
+                    console.log('[+] Email sent');
+                } catch (err) {
+                    console.error('[x] Email failed:', err.message);
+                }
+                 */
+
                 // Insert or update TVA mapping
                 const { error: tvaError } = await supabase
                     .from('tva_mapping')
