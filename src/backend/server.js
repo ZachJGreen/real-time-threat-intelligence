@@ -2,7 +2,8 @@ require('dotenv').config({ path: '../../.env'});
 const express = require('express');
 const cors = require("cors");
 const { createClient } = require('@supabase/supabase-js');
-const { fetchAndStoreShodanData } = require("../../api/fetch_osint");
+const { fetchAndStoreShodanData } = require("../../api/shodan_integration");
+const shodanRouter = require("../../api/shodan_router");
 const { getIncidentResponsePlan } = require("./incident_response");
 const cbaAnalysis = require('./cba_analysis');
 
@@ -25,6 +26,9 @@ app.get('/', (req, res) => {
     res.send('Welcome to the Real-Time Threat Intelligence API!');
 });
 
+// Mount the Shodan router
+app.use('/api', shodanRouter);
+
 // Fetch Shodan threat data
 app.post("/api/fetchShodanThreatData", async (req, res) => {
   const { ip } = req.body;  // Use req.body to access the IP
@@ -34,13 +38,26 @@ app.post("/api/fetchShodanThreatData", async (req, res) => {
   }
 
   try {
-      // Assuming fetchAndStoreShodanData is a function that fetches and stores data
-      await fetchAndStoreShodanData(ip);  // Call the function to fetch and store data
-      res.json({ message: "Shodan threat data fetched and stored successfully" });
-  } catch (error) {
-      res.status(500).json({ message: "Error fetching or storing Shodan data", error: error.message });
-  }
+    const result = await fetchAndStoreShodanData(ip);
+    if (result.success) {
+        res.json({ 
+            message: "Shodan threat data fetched and stored successfully",
+            riskScore: result.riskScore 
+        });
+    } else {
+        res.status(500).json({ 
+            message: "Error fetching or storing Shodan data", 
+            error: result.error 
+        });
+    }
+} catch (error) {
+    res.status(500).json({ 
+        message: "Error fetching or storing Shodan data", 
+        error: error.message 
+    });
+}
 });
+
 
 
 // Get threat data for dashboard

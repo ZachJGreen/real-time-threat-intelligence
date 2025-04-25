@@ -1,27 +1,24 @@
-require('dotenv').config({ path: '../../.env'});
-const express = require('express');
+require('dotenv').config({ path: './.env'});
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 const { handleThreat } = require('../src/backend/alerts.js');
 
-
-const app = express();
-const port = process.env.PORT || 5000;
-app.use(express.json());
-
-// Supabase configuration
+// Environment configuration
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
-
-// Shodan API key
 const SHODAN_API_KEY = process.env.SHODAN_API_KEY;
 
 
-// Function to fetch data from Shodan API
-const getShodanData = async (ip) => {
+
+/**
+ * Fetches data from Shodan for a given IP address
+ * @param {string} ip - The IP address to analyze 
+ * @returns {Promise<object>} - Shodan data
+ */
+async function fetchShodanData(ip) {
+    // Check cache first
     try {
-        // Check cache first
         const { data: cachedData, error: cacheError } = await supabase
             .from('api_cache')
             .select('response, expires_at')
@@ -33,31 +30,43 @@ const getShodanData = async (ip) => {
             console.log(`Using cached Shodan data for ${ip}`);
             return cachedData.response;
         }
+    } catch (error) {
+        console.log("Cache check error or no cache found - proceeding with API call");
+    }
 
-        // Make API call if no valid cache
-        const url = `https://api.shodan.io/shodan/host/${ip}?key=${SHODAN_API_KEY}`;
+    // Make fresh API call if no valid cache
+    const url = `https://api.shodan.io/shodan/host/${ip}?key=${shodanApiKey}`;
+
+    try {
+        console.log(`Fetching fresh Shodan data for ${ip}`);
         const response = await axios.get(url);
-        
-        // Store in cache
+        const data = response.data;
+
+        // Store in cache for future use
         const expiryTime = new Date();
         expiryTime.setHours(expiryTime.getHours() + 6); // Cache for 6 hours
         
         await supabase.from('api_cache').upsert({
             api_type: 'shodan',
             query_key: ip,
-            response: response.data,
+            response: data,
             expires_at: expiryTime.toISOString()
         });
-        
-        return response.data;
+
+        return data;
     } catch (error) {
-        console.error(`Error fetching Shodan data: ${error.message}`);
+        console.error("Error fetching from Shodan:", error.response?.data || error.message);
         return null;
     }
-};
+}
 
-// Function to store data in Supabase
-const storeData = async (ip, data) => {
+/**
+ * Stores Shodan data in the database and processes threat information
+ * @param {string} ip - The IP address
+ * @param {object} data - Shodan data to store
+ * @returns {Promise<object>} - Result of storage operation
+ */
+async function storeShodanData(ip, data) {
     try {
         // Extract the relevant data
         const ports = data.ports || [];
@@ -91,44 +100,59 @@ const storeData = async (ip, data) => {
             throw error;
         }
         
-        return { message: `Data stored successfully for ${ip}` };
+        // Calculate risk score for threat alerting
+        const numberOfPorts = ports.length;
+        const hasVulnerabilities = Object.keys(vulns).length > 0;
+        const riskScore = numberOfPorts * 2 + (hasVulnerabilities ? 30 : 0);
+
+        // Trigger alert if high risk
+        if (riskScore > 20) {
+            handleThreat({
+                name: `High Risk Threat for ${ip}`,
+                riskScore: riskScore,
+            });
+        }
+        
+        return { 
+            message: `Data stored successfully for ${ip}`,
+            riskScore: riskScore
+        };
     } catch (error) {
         console.error(`Error storing data: ${error.message}`);
         return { error: error.message };
     }
+}
+
+/**
+ * Main function to fetch and store Shodan data
+ * @param {string} ip - The IP address to process
+ * @returns {Promise<object>} - Combined result of fetch and store operations
+ */
+async function fetchAndStoreShodanData(ip) {
+    try {
+        const shodanData = await fetchShodanData(ip);
+        if (!shodanData) {
+            throw new Error("Failed to fetch data from Shodan");
+        }
+        
+        const result = await storeShodanData(ip, shodanData);
+        return {
+            success: true,
+            ...result,
+            data: shodanData
+        };
+    } catch (error) {
+        console.error(`Error in fetchAndStoreShodanData: ${error.message}`);
+        return {
+            success: false,
+            error: error.message
+        };
+    }
+}
+
+// Export for use in other modules
+module.exports = { 
+    fetchShodanData,
+    storeShodanData,
+    fetchAndStoreShodanData
 };
-
-// API route for fetching and storing threat intelligence
-app.get('/shodan', async (req, res) => {
-    const ip = req.query.ip;
-    if (!ip) {
-        return res.status(400).json({ error: "IP address is required" });
-    }
-
-    const shodanData = await getShodanData(ip);
-    if (!shodanData) {
-        return res.status(500).json({ error: "Failed to fetch data from Shodan" });
-    }
-
-    const result = await storeData(ip, shodanData);
-
-    const numberOfPorts = shodanData.ports ? shodanData.ports.length : 0;
-    const hasVulnerabilities = shodanData.vulns && Object.keys(shodanData.vulns).length > 0;
-
-    const riskScore = numberOfPorts * 2 + (hasVulnerabilities ? 30 : 0);
-
-    if (riskScore > 20) {
-        handleThreat({
-            name: `High Risk Threat for ${ip}`,
-            riskScore: riskScore,
-        });
-    }
-    res.json(result);
-});
-
-// Start the server
-app.listen(port, () => {
-    console.log(`Shodan API server running on http://localhost:${port}`);
-});
-
-module.exports = { getShodanData, storeData };
