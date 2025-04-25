@@ -1,18 +1,16 @@
 CREATE TABLE tva_mapping (
     id SERIAL PRIMARY KEY,
-    asset_id INT REFERENCES assets(id),
-    threat_id INT REFERENCES threats(id) ON DELETE CASCADE,
-    vulnerability_id INT REFERENCES vulnerabilities(id) ON DELETE CASCADE,
-    likelihood INT CHECK (likelihood BETWEEN 1 AND 5),
-    impact INT CHECK (impact BETWEEN 1 AND 5),
-    risk_score INT GENERATED ALWAYS AS (likelihood * impact) STORED,
-    UNIQUE (asset_id, threat_id, vulnerability_id)
+    asset_id INTEGER REFERENCES assets(id),
+    threat_id INTEGER REFERENCES threats(id),
+    vulnerability_id INTEGER REFERENCES vulnerabilities(id),
+    likelihood INTEGER CHECK (likelihood BETWEEN 1 AND 5),
+    impact INTEGER CHECK (impact BETWEEN 1 AND 5),
+    risk_score INTEGER GENERATED ALWAYS AS (likelihood * impact) STORED,
+    last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Not sure if I should just these insert statements into another file
--- but the following statements all threat-vulnerability pairs to the TVA table (Task 2)
 
--- add assets
+-- Sample data
 INSERT INTO assets (asset_name, asset_type, description) VALUES
     ('Server', 'Hardware', 'Hosts website and customer data'),
     ('Workstations', 'Hardware', 'Used by employees to complete work'),

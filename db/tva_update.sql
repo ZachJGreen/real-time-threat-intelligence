@@ -1,4 +1,4 @@
--- /db/tva_update.sql
+
 
 -- Elevate likelihood for any mapped threat that appears in high-risk OSINT data
 UPDATE tva_mapping
