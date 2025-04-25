@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS tva_mapping (
     last_updated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Threat Data Table 
+
+-- Shodan Threat Data Table 
 CREATE TABLE IF NOT EXISTS threat_data (
     id SERIAL PRIMARY KEY,
     ip_address VARCHAR(45) NOT NULL,
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS threat_data (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Alert Logs Table (new)
+-- Alert Logs Table
 CREATE TABLE IF NOT EXISTS alerts (
     id SERIAL PRIMARY KEY,
     alert_type VARCHAR(50) NOT NULL,
@@ -80,16 +81,18 @@ CREATE TABLE IF NOT EXISTS incident_logs (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- API Cache Table (new)
+-- Create a table for tracking API requests to prevent redundant calls
 CREATE TABLE IF NOT EXISTS api_cache (
     id SERIAL PRIMARY KEY,
     api_type VARCHAR(50) NOT NULL,
     query_key VARCHAR(255) NOT NULL,
     response JSONB,
     expires_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(api_type, query_key)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Create unique constraint on query_key and api_type
+CREATE UNIQUE INDEX idx_api_cache ON api_cache(api_type, query_key);
 
 -- Create indexes for performance
 CREATE INDEX IF NOT EXISTS idx_asset_type ON assets(asset_type);
@@ -99,6 +102,3 @@ CREATE INDEX IF NOT EXISTS idx_tva_threat ON tva_mapping(threat_id);
 CREATE INDEX IF NOT EXISTS idx_tva_risk ON tva_mapping(risk_score);
 CREATE INDEX IF NOT EXISTS idx_ip_address ON threat_data(ip_address);
 CREATE INDEX IF NOT EXISTS idx_alert_status ON alerts(status);
-
-
-
