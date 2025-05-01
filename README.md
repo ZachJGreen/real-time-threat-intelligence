@@ -22,7 +22,7 @@ Week 9 — *Deadline: 20 April 2025*
 |--------------------------------------|-------------------------------------------------------------------------|
 | Security Validation Report(Maisha)           | `NEED/docs/security_validation.md`                                         |
 | Performance Test Results(Zach)             | `NEED/docs/performance_testing.md`                                         |
-| Optimized Database Queries(Hallee)           | `NEED/db/query_optimizations.sql`                                          |
+| Optimized Database Queries(Hallee)           | `db/query_optimizations.sql`                                          |
 | Deployment Checklist & Production Setup(Morgan) | `NEED/docs/deployment_checklist.md`                                    |
 | Peer Review Report & Issue Tracking(Morgan)  | `NEED/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
 | Troubleshooting & Maintenance Guide  | `/docs/troubleshooting_guide.md`                                       |
@@ -51,7 +51,7 @@ Week 7 — *Deadline: 6 April 2025*
 | Threat Report Generator          | `src/backend/report_generator.js`                |
 | Security Audit Report(Zach)            | `NEED/docs/security_audit.md`                |
 | Threat Event Logging System(Maisha)      | `NEED/src/logging.py`                         |
-| Optimized Database Queries(Hallee)       | `NEED/db/optimized_queries.sql`              |
+| Optimized Database Queries(Hallee)       | `db/query_optimizations.sql`              |
 
 --- 
 
