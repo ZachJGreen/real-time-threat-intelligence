@@ -1,10 +1,10 @@
 
-const { createClient } = require('@supabase/supabase-js');
+const supabase = require('../src/backend/supabase');
 const { fetchShodanData } = require('./shodan_integration');
 const { handleThreat } = require('../src/backend/alerts.js');
 const { calculateRiskScore } = require('../src/backend/risk_scoring');
 
-const supabase = require('../src/backend/supabase');
+
 
 /**
  * Fetches threat intelligence data from Shodan and stores it in Supabase

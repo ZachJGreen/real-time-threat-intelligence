@@ -195,6 +195,74 @@ app.post("/api/updateAlertStatus", async (req, res) => {
     }
 });
 
+// Get all alerts (open and acknowledged)
+app.get("/api/getAllAlerts", async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('alerts')
+      .select(`
+        id,
+        alert_type,
+        risk_score,
+        description,
+        status,
+        created_at,
+        threats:threat_id (id, threat_name)
+      `)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching all alerts:', error);
+    res.status(500).json({ error: 'Failed to fetch alerts' });
+  }
+});
+
+// Create a new alert (for testing or manual creation)
+app.post("/api/createAlert", async (req, res) => {
+    try {
+      const { threat_name, risk_score, description } = req.body;
+      
+      if (!threat_name || !risk_score) {
+        return res.status(400).json({ error: "Missing required parameters" });
+      }
+      
+      // Find associated threat
+      const { data: threats } = await supabase
+        .from('threats')
+        .select('id')
+        .ilike('threat_name', `%${threat_name}%`)
+        .limit(1);
+      
+      const threat_id = threats && threats.length > 0 ? threats[0].id : null;
+      
+      // Create the alert
+      const { data, error } = await supabase
+        .from('alerts')
+        .insert({
+          alert_type: risk_score >= 20 ? 'Critical' : 'High Risk',
+          threat_id: threat_id,
+          risk_score: risk_score,
+          description: description || `${threat_name} detected with risk score of ${risk_score}`,
+          status: 'Open',
+          created_at: new Date().toISOString()
+        })
+        .select();
+     
+        if (error) {
+            throw error;
+        }
+          
+          res.json({ message: "Alert created successfully", data });
+        } catch (error) {
+          console.error('Error creating alert:', error);
+          res.status(500).json({ error: 'Failed to create alert' });
+        }
+      });
 
 // Perform CBA
 app.post("/api/performCBA", async (req, res) => {

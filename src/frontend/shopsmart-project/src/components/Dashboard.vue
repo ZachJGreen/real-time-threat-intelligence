@@ -26,39 +26,70 @@ export default {
       showDashboard: false,
       alerts: [],
       toast: useToast(),
+      alertsPollingInterval: null,
     };
   },
   methods: {
+    
+    async fetchAlerts(){
+      try{
+        const response = await axios.get('http://localhost:5000/api/getRecentAlerts');
+        this.alerts = response.data;
+      } catch (error) {
+        console.error('Error fetching alerts:', error);
+        this.toast.error('Failed to fetch alerts from the server');
+      }
+    },
+
     receiveThreat(newThreat) {
       this.alerts.push(newThreat);
 
       if (newThreat.riskScore > 20) {
         this.notifyCriticalThreat(newThreat);
       }
+
+      this.toast.info(`New threat detected: ${newThreat.name}`, {
+        timeout: 5000,
+      });
     },
+
     async notifyCriticalThreat(threat) {
       console.log(`Critical Threat Detected: ${threat.name}`);
 
       const webhookUrl = "https://real-webhook-url.com/alert";
 
       try {
-          await axios.post(webhookUrl, {
-            threatName: threat.name,
-            riskScore: threat.riskScore,
-            message: "Critical Threat Detected!",
-          });
-          this.toast.success(`🚨 Webhook sent for ${threat.name}`, {
-            timeout: 5000,
-        }); 
+
+        await axios.post('http://localhost:5000/api/createAlert', {
+          threat_name: threat.name,
+          risk_score: threat.riskScore,
+          description: `Critical Threat: ${threat.name}`
+        });
+
+        this.toast.success(`🚨 Alert created for ${threat.name}`, {
+          timeout: 5000,
+        });
+
+        // Refresh the alerts
+        this.fetchAlerts();
       } catch (error) {
         console.error("Error sending alert:", error.response || error.message);
-        this.toast.error("❌ Failed to send alert. Check console for details.", {
+        this.toast.error("❌ Failed to create alert. Check console for details.", {
           timeout: 6000,
         });
       }
     }
   },
+
   mounted() {
+    // Fetch alerts when component mounts
+    this.fetchAlerts();
+
+    // Set up polling for alerts every 30 seconds
+    this.alertsPollingInterval = setInterval(() => {
+      this.fetchAlerts();
+    }, 30000);
+
     // Simulating new threats every 5 seconds
     setInterval(() => {
       const newThreat = {
@@ -69,6 +100,13 @@ export default {
       this.receiveThreat(newThreat);
     }, 5000);
   },
+
+  beforeUnmount() {
+    // Clear the polling interval when component is unmounted
+    if (this.alertsPollingInterval) {
+      clearInterval(this.alertsPollingInterval);
+    }
+  }
 };
 </script>
 
