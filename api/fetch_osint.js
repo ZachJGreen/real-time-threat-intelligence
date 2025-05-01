@@ -4,10 +4,7 @@ const { fetchShodanData } = require('./shodan_integration');
 const { handleThreat } = require('../src/backend/alerts.js');
 const { calculateRiskScore } = require('../src/backend/risk_scoring');
 
-// Supabase configuration
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = require('../src/backend/supabase');
 
 /**
  * Fetches threat intelligence data from Shodan and stores it in Supabase
@@ -69,8 +66,11 @@ async function fetchAndStoreShodanData(ip) {
 
         return threatData;
     } catch (error) {
-        console.error("Error storing Shodan threat data:", error.message);
-        throw error;
+        console.error(`[ERROR] Operation failed (Error storing Shodan threat data): ${error.message}`);
+        return {
+            success: false,
+            error: error.message
+        };
     }
 }
 
@@ -215,7 +215,11 @@ async function processVulnerabilities(ip, vulns) {
         
         console.log(`Processed ${Object.keys(vulns).length} vulnerabilities for IP ${ip}`);
     } catch (error) {
-        console.error("Error processing vulnerabilities:", error.message);
+        console.error(`[ERROR] Operation failed (Error processing vulnerabilities): ${error.message}`);
+        return {
+            success: false,
+            error: error.message
+        };
     }
 }
 

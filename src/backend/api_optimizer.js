@@ -1,6 +1,6 @@
 // /src/api_optimizer.js
 
-require('dotenv').config();
+require('dotenv').config({ path: '../../.env'});
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 
@@ -8,10 +8,7 @@ const { createClient } = require('@supabase/supabase-js');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-// Only create the client if both URL and key are available
-const supabase = (supabaseUrl && supabaseKey)
-    ? createClient(supabaseUrl, supabaseKey)
-    : null;
+const supabase = require('./supabase');
 
 // API configuration
 const SHODAN_API_KEY = process.env.SHODAN_API_KEY;

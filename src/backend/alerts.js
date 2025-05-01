@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer";
-import axios from "axios";
+const nodemailer = require("nodemailer");
+const axios = require("axios");
 require('dotenv').config({ path: '../../.env' });
 
 // Set up email transporter (use real credentials or env vars in production)
@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendEmailAlert(threatName, riskScore) {
+async function sendEmailAlert(threatName, riskScore) {
   if (!process.env.ALERT_EMAIL_USER || !process.env.ALERT_EMAIL_PASS) {
     console.error('Email credentials not configured');
     return false;
@@ -20,8 +20,8 @@ export async function sendEmailAlert(threatName, riskScore) {
 const mailOptions = {
     from: process.env.ALERT_EMAIL_USER,
     to: process.env.ADMIN_EMAIL || 'admin@example.com',
-    subject: `🚨 High-Risk Threat Detected: ${threat}`,
-    text: `A critical threat has been detected.\n\nThreat: ${threat}\nRisk Score: ${riskScore}`,
+    subject: `🚨 High-Risk Threat Detected: ${threatName}`,
+    text: `A critical threat has been detected.\n\nThreat: ${threatName}\nRisk Score: ${riskScore}`,
 };
 
 try {
@@ -34,7 +34,7 @@ try {
 }
 }
 
-export async function sendWebhookAlert(threatName, riskScore) {
+async function sendWebhookAlert(threatName, riskScore) {
 if (!process.env.WEBHOOK_URL) {
     console.error('Webhook URL not configured');
     return false;
@@ -42,7 +42,7 @@ if (!process.env.WEBHOOK_URL) {
 
 try {
     await axios.post(process.env.WEBHOOK_URL, {
-        threat,
+        threatName,
         riskScore,
         message: 'Critical threat detected!',
         timestamp: new Date().toISOString()
@@ -55,7 +55,7 @@ try {
 }
 }
 
-export function handleThreat(threat) {
+function handleThreat(threat) {
   if (threat.riskScore > 20) {
     sendEmailAlert(threat.name, threat.riskScore);
     sendWebhookAlert(threat.name, threat.riskScore);

@@ -1,12 +1,10 @@
-require('dotenv').config({ path: './.env'});
+require('dotenv').config({ path: '../../.env'});
 const axios = require('axios');
 const { createClient } = require('@supabase/supabase-js');
 const { handleThreat } = require('../src/backend/alerts.js');
 
 // Environment configuration
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = require('../src/backend/supabase');
 const SHODAN_API_KEY = process.env.SHODAN_API_KEY;
 
 
@@ -31,11 +29,15 @@ async function fetchShodanData(ip) {
             return cachedData.response;
         }
     } catch (error) {
-        console.log("Cache check error or no cache found - proceeding with API call");
+        console.error(`[ERROR] Operation failed (Cache check error or no cache found): ${error.message}`);
+        return {
+            success: false,
+            error: error.message
+        };
     }
 
     // Make fresh API call if no valid cache
-    const url = `https://api.shodan.io/shodan/host/${ip}?key=${shodanApiKey}`;
+    const url = `https://api.shodan.io/shodan/host/${ip}?key=${SHODAN_API_KEY}`;
 
     try {
         console.log(`Fetching fresh Shodan data for ${ip}`);
@@ -55,8 +57,11 @@ async function fetchShodanData(ip) {
 
         return data;
     } catch (error) {
-        console.error("Error fetching from Shodan:", error.response?.data || error.message);
-        return null;
+        console.error(`[ERROR] Operation failed (Error fetching from Shodan): ${error.message}`);
+        return {
+            success: false,
+            error: error.message
+        };
     }
 }
 
@@ -118,8 +123,11 @@ async function storeShodanData(ip, data) {
             riskScore: riskScore
         };
     } catch (error) {
-        console.error(`Error storing data: ${error.message}`);
-        return { error: error.message };
+        console.error(`[ERROR] Operation failed (Error storing data): ${error.message}`);
+        return {
+            success: false,
+            error: error.message
+        };
     }
 }
 
