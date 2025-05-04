@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { fetchAndStoreShodanData } = require('./shodan');
+const { fetchAndStoreShodanData } = require('./shodan_integration');
 
 /**
  * API route for fetching and storing Shodan threat intelligence

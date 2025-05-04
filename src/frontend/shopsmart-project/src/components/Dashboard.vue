@@ -33,7 +33,7 @@ export default {
     
     async fetchAlerts(){
       try{
-        const response = await axios.get('http://localhost:5000/api/getRecentAlerts');
+        const response = await axios.get('http://localhost:5001/api/getRecentAlerts');
         this.alerts = response.data;
       } catch (error) {
         console.error('Error fetching alerts:', error);
@@ -60,7 +60,7 @@ export default {
 
       try {
 
-        await axios.post('http://localhost:5000/api/createAlert', {
+        await axios.post('http://localhost:5001/api/createAlert', {
           threat_name: threat.name,
           risk_score: threat.riskScore,
           description: `Critical Threat: ${threat.name}`

@@ -40,6 +40,7 @@
         <span v-if="alerts.length > 0" class="alert-badge">{{ alerts.length }}</span>
       </button>
     </div>
+  </div>
     
     <!-- Overview Tab -->
     <div v-if="activeTab === 'overview'" class="dashboard-content">
@@ -175,7 +176,13 @@
     <!-- Alerts Tab -->
     <div v-if="activeTab === 'alerts'" class="dashboard-content">
       <div class="card full-width">
-        <h3>Active Alerts</h3>
+        <div class="card-header">
+          <h3>Active Alerts</h3>
+          <button @click="showCreateAlertDialog = true" class="create-btn">
+            Create Test Alert
+          </button>
+        </div>
+        
         <div class="alerts-container">
           <div v-if="alerts.length === 0" class="no-alerts">
             No active alerts at this time.
@@ -202,21 +209,47 @@
             </div>
           </div>
         </div>
+        <!-- Add alert creation dialog -->
+        <div v-if="showCreateAlertDialog" class="alert-dialog">
+          <div class="dialog-content">
+            <h4>Create Test Alert</h4>
+            <div class="form-group">
+              <label for="alertName">Threat Name:</label>
+              <input id="alertName" v-model="newAlert.name" type="text" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="alertRisk">Risk Score (1-25):</label>
+              <input id="alertRisk" v-model.number="newAlert.riskScore" type="number" min="1" max="25" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="alertDesc">Description:</label>
+              <textarea id="alertDesc" v-model="newAlert.description" class="form-control"></textarea>
+            </div>
+            <div class="dialog-actions">
+              <button @click="createTestAlert" class="action-btn">Create</button>
+              <button @click="showCreateAlertDialog = false" class="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 import axios from 'axios';
 import CostBenefitAnalysis from './CostBenefitAnalysis.vue';
 import { threatData, threatLogData } from "../utils/risk_prioritization";
-import JsonCSV from 'vue-json-csv'
+import JsonCSV from 'vue-json-csv';
+import { useToast } from 'vue-toastification';
 
 export default {
   components: {
     downloadCsv: JsonCSV,
     CostBenefitAnalysis
+  },
+  setup() {
+    const toast = useToast(); // Add this line
+    return { toast }; // Add this line
   },
   data() {
     return {
@@ -230,6 +263,12 @@ export default {
       assetFilter: '',
       loading: false,
       errorMessage: null,
+      showCreateAlertDialog: false,
+      newAlert: {
+        name: '',
+        riskScore: 15,
+        description: ''
+      },
       recentActivities: [
         { time: new Date(Date.now() - 25 * 60000), text: 'New vulnerability detected: CVE-2023-1234' },
         { time: new Date(Date.now() - 55 * 60000), text: 'System scan completed' },
@@ -282,13 +321,13 @@ export default {
       
       try {
         console.log('Fetching threat data...');
-        const response = await axios.get('http://localhost:5000/api/getThreatData');
+        const response = await axios.get('http://localhost:1/api/getThreatData');
         this.threatLogs = response.data;
         
         const totalRiskScore = this.threatLogs.reduce((sum, log) => sum + log.risk_score, 0);
         this.averageRiskScore = (totalRiskScore / Math.max(this.threatLogs.length, 1)).toFixed(2);
         
-        const alertsResponse = await axios.get('http://localhost:5000/api/getRecentAlerts');
+        const alertsResponse = await axios.get('http://localhost:5001/api/getAllAlerts');
         this.alerts = alertsResponse.data;
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -326,7 +365,7 @@ export default {
     },
     async acknowledgeAlert(alert) {
       try {
-        await axios.post(`http://localhost:5000/api/updateAlertStatus`, {
+        await axios.post(`http://localhost:5001/api/updateAlertStatus`, {
           id: alert.id,
           status: 'Acknowledged'
         });
@@ -337,7 +376,7 @@ export default {
     },
     async resolveAlert(alert) {
       try {
-        await axios.post(`http://localhost:5000/api/updateAlertStatus`, {
+        await axios.post(`http://localhost:5001/api/updateAlertStatus`, {
           id: alert.id,
           status: 'Resolved'
         });
@@ -349,7 +388,50 @@ export default {
       } catch (error) {
         console.error('Error resolving alert:', error);
       }
+    },
+    async createTestAlert() {
+    if (!this.newAlert.name) {
+      // Check if toast is available
+      if (this.toast) {
+        this.toast.error('Please enter a threat name');
+      } else {
+        alert('Please enter a threat name');
+      }
+      return;
     }
+    try {
+      await axios.post('http://localhost:5001/api/createAlert', {
+        threat_name: this.newAlert.name,
+        risk_score: this.newAlert.riskScore,
+        description: this.newAlert.description || `Test alert: ${this.newAlert.name}`
+      });
+      
+      if (this.toast) {
+        this.toast.success('Test alert created successfully');
+      } else {
+        alert('Test alert created successfully');
+      }
+      
+      this.showCreateAlertDialog = false;
+      
+      // Clear form
+      this.newAlert = {
+        name: '',
+        riskScore: 15,
+        description: ''
+      };
+      
+      // Refresh alerts
+      this.fetchData();
+    } catch (error) {
+      console.error('Error creating test alert:', error);
+      if (this.toast) {
+        this.toast.error('Failed to create test alert');
+      } else {
+        alert('Failed to create test alert: ' + error.message);
+      }
+    }
+    },
   },
   mounted() {
     this.fetchData();
@@ -364,6 +446,7 @@ export default {
       clearInterval(this.dataInterval);
     }
   }
+
 };
 </script>
 
@@ -691,6 +774,86 @@ h3 {
 
 .threat-download-csv {
   margin-left: 8px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.create-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.create-btn:hover {
+  background-color: #45a049;
+}
+
+.alert-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background-color: #f1f1f1;
+  color: #333;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
 }
 
 /* Responsive adjustments */
