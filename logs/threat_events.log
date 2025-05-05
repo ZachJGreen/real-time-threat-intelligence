@@ -1,0 +1,4 @@
+[2025-05-05 17:07:30.315] [CRITICAL] Threat Detected: Threat 48 (Risk Score: 36) {"description":"Critical Threat: Threat 48","source":"manual","created_by":"::1","timestamp":"2025-05-05T22:07:30.315Z","risk_score":36}
+[2025-05-05 17:07:40.302] [CRITICAL] Threat Detected: Threat 30 (Risk Score: 40) {"description":"Critical Threat: Threat 30","source":"manual","created_by":"::1","timestamp":"2025-05-05T22:07:40.301Z","risk_score":40}
+[2025-05-05 17:07:45.298] [CRITICAL] Threat Detected: Threat 92 (Risk Score: 27) {"description":"Critical Threat: Threat 92","source":"manual","created_by":"::1","timestamp":"2025-05-05T22:07:45.298Z","risk_score":27}
+[2025-05-05 17:07:55.304] [CRITICAL] Threat Detected: Threat 87 (Risk Score: 39) {"description":"Critical Threat: Threat 87","source":"manual","created_by":"::1","timestamp":"2025-05-05T22:07:55.304Z","risk_score":39}

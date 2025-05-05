@@ -6,6 +6,7 @@ const { fetchAndStoreShodanData } = require("../../api/shodan_integration");
 const shodanRouter = require("../../api/shodan_router");
 const { getIncidentResponsePlan } = require("./incident_response");
 const cbaAnalysis = require('./cba_analysis');
+const logger = require('./logging');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // allow all HTTP methods
   }));
 app.use(express.json());
+app.use(logger.accessLogger);
 
 // Initialize supabase
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -23,6 +25,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Root endpoint
 app.get('/', (req, res) => {
+  logger.logSystem('INFO', 'Root endpoint accessed');
     res.send('Welcome to the Real-Time Threat Intelligence API!');
 });
 
@@ -57,8 +60,6 @@ app.post("/api/fetchShodanThreatData", async (req, res) => {
     });
 }
 });
-
-
 
 // Get threat data for dashboard
 app.get("/api/getThreatData", async (req, res) => {
@@ -222,14 +223,24 @@ app.get("/api/getAllAlerts", async (req, res) => {
   }
 });
 
+
+
 // Create a new alert (for testing or manual creation)
 app.post("/api/createAlert", async (req, res) => {
     try {
       const { threat_name, risk_score, description } = req.body;
       
       if (!threat_name || !risk_score) {
+        logger.logSystem('WARN', 'Missing parameters in createAlert request', req.body);
         return res.status(400).json({ error: "Missing required parameters" });
       }
+
+      // Log the threat detection
+      await logger.logThreat(threat_name, risk_score, {
+        description: description || `${threat_name} detected with risk score of ${risk_score}`,
+        source: 'manual',
+        created_by: req.ip || 'unknown'
+      });
       
       // Find associated threat
       const { data: threats } = await supabase
@@ -254,11 +265,13 @@ app.post("/api/createAlert", async (req, res) => {
         .select();
      
         if (error) {
-            throw error;
+          logger.logSystem('ERROR', 'Error creating alert in database', { error: error.message });
+          throw error;
         }
-          
-          res.json({ message: "Alert created successfully", data });
+        logger.logSystem('INFO', 'Alert created successfully', { alert_id: data[0].id });
+        res.json({ message: "Alert created successfully", data });
         } catch (error) {
+          logger.logSystem('ERROR', 'Failed to create alert', { error: error.message });
           console.error('Error creating alert:', error);
           res.status(500).json({ error: 'Failed to create alert' });
         }
@@ -351,8 +364,46 @@ app.get("/api/incidentResponse", (req, res) => {
     res.json({ threatType, responsePlan: plan });
 });
 
+// Global error handler with logging
+app.use((err, req, res, next) => {
+  logger.logSystem('ERROR', 'Unhandled exception in API request', {
+      path: req.path,
+      method: req.method,
+      error: err.message,
+      stack: err.stack
+  });
+  
+  res.status(500).json({
+      error: 'Internal Server Error',
+      message: 'An unexpected error occurred'
+  });
+});
 
 // Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+// Graceful shutdown handling
+process.on('SIGTERM', () => {
+  logger.logSystem('INFO', 'SIGTERM received, shutting down gracefully');
+  
+  // Close log streams
+  logger.closeLogStreams();
+  
+  server.close(() => {
+      logger.logSystem('INFO', 'Server closed');
+      process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  logger.logSystem('INFO', 'SIGINT received, shutting down gracefully');
+  
+  // Close log streams
+  logger.closeLogStreams();
+  
+  server.close(() => {
+      logger.logSystem('INFO', 'Server closed');
+      process.exit(0);
+  });
+});
