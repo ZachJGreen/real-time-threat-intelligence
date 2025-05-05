@@ -35,7 +35,7 @@ The Real-Time Threat Intelligence (RTTI) platform is a comprehensive security so
 - Authentication credentials
 
 ### Accessing the Platform
-1. Navigate to `https://rtti.shopsmart.com` in your web browser
+1. Navigate to ~~`https://rtti.shopsmart.com`~~ in your web browser
 2. Enter your username and password
 3. Use multi-factor authentication if configured
 4. You will be directed to the main dashboard upon successful login
@@ -244,8 +244,8 @@ To customize automatic responses:
 ### Getting Help
 For additional assistance:
 - Click the "Help" icon in the top-right corner
-- Email support@shopsmart-rtti.com
-- Call the security operations center at (555) 123-4567
+- Email ~~support@shopsmart-rtti.com~~
+- Call the security operations center at ~~(555) 123-4567~~
 
 > **Future Enhancement:** The help system, including the help icon, documentation access, and support ticketing system are planned for a future release.
 
