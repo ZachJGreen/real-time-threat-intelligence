@@ -1,6 +1,6 @@
 # Deployment Checklist – Real-Time Threat Intelligence (RTTI)
 
-## ✅ Server Security
+## Server Security
 
 - [x] OS and packages updated (`sudo apt update && sudo apt upgrade -y`)
 - [x] Created new non-root user (`deployuser`)
@@ -10,27 +10,27 @@
 - [x] UFW firewall enabled and ports allowed (OpenSSH, 80, 443)
 - [x] Fail2Ban installed and enabled
 
-## ✅ Logging & Monitoring
+## Logging & Monitoring
 
 - [x] `rsyslog` and `logrotate` confirmed active
 - [x] Fail2Ban logging working
 - [ ] CloudWatch Agent or alternative monitoring set up
 
-## ✅ Deployment (AWS EC2 Example)
+## Deployment (AWS EC2 Example)
 
 - [x] Code uploaded via `scp` to `/var/www/html/`
 - [x] Web server restarted (`apache2` or `nginx`)
 - [x] App accessible via public IP/domain
 - [x] HTTPS configured (e.g., Let’s Encrypt)
 
-## ✅ Application Testing
+## Application Testing
 
 - [x] Services checked (`systemctl status`)
 - [x] App endpoints tested (`/health`, `/api`)
 - [x] Frontend loads correctly
 - [x] Database connected and functional
 
-## ✅ Final Git Commit
+## Final Git Commit
 
 - [x] Deployment scripts/configs added to repo
 - [x] Final commit made with message:
