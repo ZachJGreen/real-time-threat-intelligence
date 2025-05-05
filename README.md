@@ -37,7 +37,7 @@ Week 8 — *Deadline: 13 April 2025*
 | AI-Powered Threat Hunting(Luis)   | `/src/ai_threat_hunting.js`              |
 | Automated Threat Mitigation System(Maisha) | `NEED/src/threat_mitigation.py`              |
 | Complete System Documentation(Hallee)       | `NEED/docs/system_manual.md`                 |
-| User Guide for Analysts(Hallee)             | `NEED/docs/user_guide.md`                    |
+| User Guide for Analysts(Hallee)             | `/docs/user_guide.md`                    |
 | API Documentation(Luis)                   | `NEED/docs/api_documentation.yaml`           |
 
 ---
