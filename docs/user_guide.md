@@ -53,8 +53,6 @@ The Real-Time Threat Intelligence (RTTI) platform is a comprehensive security so
 
 The main dashboard provides a comprehensive overview of your security posture:
 
-![Dashboard Overview](../assets/dashboard_overview.png)
-
 ### Dashboard Components
 1. **Risk Summary**: Displays high-risk threats and average risk score
 2. **Asset Exposure**: Shows affected assets and protection rate
