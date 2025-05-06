@@ -35,7 +35,7 @@ Week 8 — *Deadline: 13 April 2025*
 |-------------------------------------|-------------------------------------------|
 | Automated Defensive Response Script(Zach) | `/src/backend/blue_team_defense.js`              |
 | AI-Powered Threat Hunting(Luis)   | `/src/ai_threat_hunting.js`              |
-| Automated Threat Mitigation System(Hallee) | `/src/threat_mitigation.py`              |
+| Automated Threat Mitigation System(Hallee) | `/src/threat_mitigation.js`              |
 | Complete System Documentation(Hallee)       | `/docs/system_manual.md`                 |
 | User Guide for Analysts(Hallee)             | `/docs/user_guide.md`                    |
 | API Documentation(Luis)                   | `/docs/api_documentation.yaml`           |
