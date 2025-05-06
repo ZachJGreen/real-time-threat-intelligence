@@ -11,7 +11,7 @@ Week 10 — *Deadline: 27 April 2025*
 | Final Project Report(Hallee)          | `/docs/final_project_report.pdf`     |
 | Final Presentation Slides(Morgan)     | `NEED/docs/final_presentation.pptx`      |
 | Final System Demonstration *(optional)*(Together) | `NEED/docs/final_demo.mp4`           |
-| System Walkthrough Guide(Zach)      | `NEED/docs/system_walkthrough.md`        |
+| System Walkthrough Guide(Zach)      | `/docs/system_walkthrough.md`        |
 | Final Git Repository Update   | `/README.md`                         |
 
 ---
@@ -21,7 +21,7 @@ Week 9 — *Deadline: 20 April 2025*
 | Task                                 | Submission Path                                                        |
 |--------------------------------------|-------------------------------------------------------------------------|
 | Security Validation Report(Maisha)           | `NEED/docs/security_validation.md`                                         |
-| Performance Test Results(Zach)             | `NEED/docs/performance_testing.md`                                         |
+| Performance Test Results(Zach)             | `/docs/performance_test.md`                                         |
 | Optimized Database Queries(Hallee)           | `db/query_optimizations.sql`                                          |
 | Deployment Checklist & Production Setup(Morgan) | `/docs/deployment_checklist.md`                                    |
 | Peer Review Report & Issue Tracking(Morgan)  | `/docs/peer_review.md`, `/docs/issue_tracking.md`                     |
@@ -49,7 +49,7 @@ Week 7 — *Deadline: 6 April 2025*
 |----------------------------------|-------------------------------------------|
 | Updated Risk Scoring Model       | `src/backend/risk_scoring.js`                    |
 | Threat Report Generator          | `src/backend/report_generator.js`                |
-| Security Audit Report(Zach)            | `NEED/docs/security_audit.md`                |
+| Security Audit Report(Zach)            | `/docs/security_audit.md`                |
 | Threat Event Logging System(Hallee)      | `/src/backend/logging.js`                         |
 | Optimized Database Queries(Hallee)       | `db/query_optimizations.sql`              |
 
