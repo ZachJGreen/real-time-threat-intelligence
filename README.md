@@ -24,7 +24,7 @@ Week 9 — *Deadline: 20 April 2025*
 | Performance Test Results(Zach)             | `NEED/docs/performance_testing.md`                                         |
 | Optimized Database Queries(Hallee)           | `db/query_optimizations.sql`                                          |
 | Deployment Checklist & Production Setup(Morgan) | `NEED/docs/deployment_checklist.md`                                    |
-| Peer Review Report & Issue Tracking(Morgan)  | `NEED/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
+| Peer Review Report & Issue Tracking(Morgan)  | `/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
 | Troubleshooting & Maintenance Guide  | `/docs/troubleshooting_guide.md`                                       |
 
 ---
@@ -38,7 +38,7 @@ Week 8 — *Deadline: 13 April 2025*
 | Automated Threat Mitigation System(Maisha) | `NEED/src/threat_mitigation.py`              |
 | Complete System Documentation(Hallee)       | `/docs/system_manual.md`                 |
 | User Guide for Analysts(Hallee)             | `/docs/user_guide.md`                    |
-| API Documentation(Luis)                   | `NEED/docs/api_documentation.yaml`           |
+| API Documentation(Luis)                   | `/docs/api_documentation.yaml`           |
 
 ---
 
