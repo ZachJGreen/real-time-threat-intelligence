@@ -8,7 +8,7 @@ Week 10 — *Deadline: 27 April 2025*
 
 | Task                          | Submission Path                      |
 |-------------------------------|---------------------------------------|
-| Final Project Report(Hallee)          | `NEED/docs/final_project_report.pdf`     |
+| Final Project Report(Hallee)          | `/docs/final_project_report.pdf`     |
 | Final Presentation Slides(Morgan)     | `NEED/docs/final_presentation.pptx`      |
 | Final System Demonstration *(optional)*(Together) | `NEED/docs/final_demo.mp4`           |
 | System Walkthrough Guide(Zach)      | `NEED/docs/system_walkthrough.md`        |
