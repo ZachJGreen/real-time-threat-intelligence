@@ -127,16 +127,9 @@
             <option value="">All Assets</option>
             <option v-for="asset in uniqueAssets" :key="asset">{{ asset }}</option>
           </select>
-          <download-csv
-            :data="csvData"
-            :fields="csvFields"
-            name="ShopSmart_Threat_Intelligence_Report.csv"
-            class="threat-download-csv"
-          >
-            <v-btn color="info" dark tile elevation="0">
-              Generate CSV Report
-            </v-btn>
-          </download-csv>
+          <button @click="downloadCSV" class="action-btn report-btn">
+            Generate CSV Report
+          </button>
           <button @click="generatePdfReport" class="action-btn report-btn">
             Generate PDF Report
           </button>
@@ -309,10 +302,6 @@ export default {
         
         return matchesFilter && matchesAsset;
       });
-    },
-    csvData(){
-      const prepared = prepareCSVData(this.filteredThreatLogs);
-      return prepared;
     }
   },
   methods: {
@@ -497,7 +486,72 @@ async generatePdfReport() {
     console.error('Error generating PDF report:', error);
     this.toast.error(`Failed to generate report: ${error.message}`);
   }
+},
+getCsvData() {
+      console.log("Preparing CSV data...");
+      // Use the filtered threats if there are any, otherwise use all threats
+      const dataSource = this.filteredThreatLogs.length > 0 
+        ? this.filteredThreatLogs 
+        : this.threatLogs;
+      
+      // Make sure we have data to process
+      if (!dataSource || dataSource.length === 0) {
+        console.warn("No threat data available for CSV");
+        return [];
+      }
+      
+      // Use the utility function to prepare the data
+      const prepared = prepareCSVData(dataSource);
+      console.log(`Prepared ${prepared.length} records for CSV export`);
+      
+      return prepared;
+    },
+
+    downloadCSV() {
+  // Get the data
+  const data = this.getCsvData();
+  
+  // Make sure we have data
+  if (!data || data.length === 0) {
+    this.toast.error("No data available for CSV export");
+    return;
+  }
+  
+  console.log("CSV data count:", data.length);
+  
+  // Get field headers
+  const fields = this.csvFields;
+  const headers = Object.values(fields);
+  
+  // Create CSV content
+  let csvContent = headers.join(',') + '\n';
+  
+  // Add data rows
+  data.forEach(item => {
+    const row = Object.keys(fields).map(key => {
+      // Format the value and escape commas and quotes
+      const value = (item[key] !== undefined && item[key] !== null) ? item[key] : '';
+      const formatted = String(value).replace(/"/g, '""');
+      return `"${formatted}"`;
+    });
+    csvContent += row.join(',') + '\n';
+  });
+
+  // Create blob and download link
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'ShopSmart_Threat_Intelligence_Report.csv');
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  
+  // Trigger download and clean up
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
+
   },
   mounted() {
     this.fetchData();

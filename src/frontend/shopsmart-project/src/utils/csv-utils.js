@@ -31,27 +31,31 @@ export const getCSVFields = () => {
    */
   export const prepareCSVData = (threats) => {
     if (!Array.isArray(threats) || threats.length === 0) {
-        console.error('No threat data available or invalid format');
-        return [];
+      console.error('No threat data available or invalid format');
+      return [];
     }
   
     return threats.map(threat => {
+      // Make sure to handle null or undefined values throughout
+      if (!threat) return {}; 
+  
       // Get asset type from asset name
-      const assetType = determineAssetType(threat.asset_name);
+      const assetType = determineAssetType(threat.asset_name || '');
       
       // Determine risk status based on score
-      const riskStatus = getRiskStatus(threat.risk_score);
+      const riskScore = typeof threat.risk_score === 'number' ? threat.risk_score : 0;
+      const riskStatus = getRiskStatus(riskScore);
       
       // Get recommended actions based on threat type
-      const recommendedActions = getRecommendedActions(threat.threat_name);
+      const recommendedActions = getRecommendedActions(threat.threat_name || '');
       
       // Get mitigation status based on risk score
-      const mitigationStatus = getMitigationStatus(threat.risk_score);
+      const mitigationStatus = getMitigationStatus(riskScore);
   
       // Format the detection date
       const detectionDate = formatDate(threat.last_updated || threat.created_at || new Date());
   
-      // Return enhanced data
+      // Return enhanced data - ensure all fields exist
       return {
         threat_name: threat.threat_name || 'Unknown Threat',
         asset_name: threat.asset_name || 'Unknown Asset',
@@ -60,7 +64,7 @@ export const getCSVFields = () => {
         cve_id: threat.cve_id || 'N/A',
         likelihood: threat.likelihood || 'N/A',
         impact: threat.impact || 'N/A',
-        risk_score: threat.risk_score || 0,
+        risk_score: riskScore,
         detection_date: detectionDate,
         status: riskStatus,
         mitigation_status: mitigationStatus,
@@ -149,7 +153,7 @@ export const getCSVFields = () => {
     
     // Check for partial matches if exact match not found
     for (const [key, value] of Object.entries(recommendations)) {
-      if (threatType.includes(key)) {
+      if (threatType.toLowerCase().includes(key.toLowerCase())) {
         return value;
       }
     }
