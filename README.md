@@ -48,7 +48,7 @@ Week 7 — *Deadline: 6 April 2025*
 | Task                             | Submission Path                          |
 |----------------------------------|-------------------------------------------|
 | Updated Risk Scoring Model       | `src/backend/risk_scoring.js`                    |
-| Threat Report Generator          | `src/backend/report_generator.js`                |
+| Threat Report Generator(Hallee)          | `src/backend/report_generator.js`                |
 | Security Audit Report(Zach)            | `/docs/security_audit.md`                |
 | Threat Event Logging System(Hallee)      | `/src/backend/logging.js`                         |
 | Optimized Database Queries(Hallee)       | `db/query_optimizations.sql`              |
