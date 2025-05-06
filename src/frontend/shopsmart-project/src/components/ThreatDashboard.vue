@@ -128,7 +128,7 @@
             <option v-for="asset in uniqueAssets" :key="asset">{{ asset }}</option>
           </select>
           <download-csv
-            :data="filteredThreatLogs"
+            :data="csvData"
             :fields="csvFields"
             name="ShopSmart_Threat_Intelligence_Report.csv"
             class="threat-download-csv"
@@ -311,7 +311,8 @@ export default {
       });
     },
     csvData(){
-      return prepareCSVData(this.filteredThreatLogs);
+      const prepared = prepareCSVData(this.filteredThreatLogs);
+      return prepared;
     }
   },
   methods: {

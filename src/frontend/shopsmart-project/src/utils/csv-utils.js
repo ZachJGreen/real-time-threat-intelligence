@@ -30,8 +30,9 @@ export const getCSVFields = () => {
    * @returns {Array} Enhanced threat data for CSV
    */
   export const prepareCSVData = (threats) => {
-    if (!Array.isArray(threats)) {
-      return [];
+    if (!Array.isArray(threats) || threats.length === 0) {
+        console.error('No threat data available or invalid format');
+        return [];
     }
   
     return threats.map(threat => {
