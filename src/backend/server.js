@@ -7,6 +7,7 @@ const shodanRouter = require("../../api/shodan_router");
 const { getIncidentResponsePlan } = require("./incident_response");
 const cbaAnalysis = require('./cba_analysis');
 const logger = require('./logging');
+const threatMitigation = require('./threat_mitigation');
 
 const app = express();
 
@@ -269,7 +270,55 @@ app.post("/api/createAlert", async (req, res) => {
           throw error;
         }
         logger.logSystem('INFO', 'Alert created successfully', { alert_id: data[0].id });
-        res.json({ message: "Alert created successfully", data });
+
+        // For critical and high-risk threats, trigger automatic mitigation
+      let mitigationResult = null;
+      if (risk_score >= 15) {
+        try {
+          // Create threat object from alert data
+          const threat = {
+            id: data[0].id,
+            type: threat_name,
+            riskScore: risk_score,
+            details: {
+              description: description,
+              source: 'alert',
+              alertId: data[0].id
+            }
+          };
+          
+          // Trigger mitigation asynchronously (don't await, so response isn't delayed)
+          mitigationResult = { status: 'initiated' };
+          
+          // Use setTimeout to not block the response
+          setTimeout(async () => {
+            try {
+              const result = await threatMitigation.mitigateThreat(threat);
+              logger.logSystem('INFO', 'Automatic mitigation completed', { 
+                alert_id: data[0].id,
+                success: result.success
+              });
+            } catch (mitErr) {
+              logger.logSystem('ERROR', 'Automatic mitigation failed', {
+                alert_id: data[0].id,
+                error: mitErr.message
+              });
+            }
+          }, 0);
+        } catch (mitErr) {
+          logger.logSystem('ERROR', 'Failed to initiate automatic mitigation', {
+            alert_id: data[0].id,
+            error: mitErr.message
+          });
+        }
+      }
+
+        res.json({
+          message: "Alert created successfully",
+          data,
+          mitigation: mitigationResult
+        });
+
         } catch (error) {
           logger.logSystem('ERROR', 'Failed to create alert', { error: error.message });
           console.error('Error creating alert:', error);
@@ -362,6 +411,74 @@ app.get("/api/incidentResponse", (req, res) => {
 
     const plan = getIncidentResponsePlan(threatType);
     res.json({ threatType, responsePlan: plan });
+});
+
+// Trigger manual mitigation for a threat
+app.post("/api/mitigateThreat", async (req, res) => {
+  try {
+      const { threatType, riskScore, details } = req.body;
+      
+      if (!threatType || !riskScore) {
+          return res.status(400).json({ 
+              error: "Missing required parameters. Please provide threatType and riskScore." 
+          });
+      }
+      
+      // Create threat object
+      const threat = {
+          type: threatType,
+          riskScore,
+          details: details || {}
+      };
+      
+      // Trigger mitigation
+      const result = await threatMitigation.mitigateThreat(threat);
+      
+      res.json(result);
+  } catch (error) {
+      console.error("Error mitigating threat:", error);
+      res.status(500).json({
+          error: "Error during threat mitigation",
+          message: error.message
+      });
+  }
+});
+
+// Get mitigation history
+app.get("/api/mitigationHistory", async (req, res) => {
+  try {
+      const { limit, threatType, severity } = req.query;
+      
+      const options = {};
+      if (limit) options.limit = parseInt(limit);
+      if (threatType) options.threatType = threatType;
+      if (severity) options.severity = severity;
+      
+      const history = await threatMitigation.getMitigationHistory(options);
+      
+      res.json(history);
+  } catch (error) {
+      console.error("Error fetching mitigation history:", error);
+      res.status(500).json({
+          error: "Error fetching mitigation history",
+          message: error.message
+      });
+  }
+});
+
+// Get mitigation effectiveness metrics
+app.get("/api/mitigationEffectiveness", async (req, res) => {
+  try {
+      const effectiveness = await threatMitigation.getMitigationEffectiveness();
+      
+      res.json(effectiveness);
+  } catch (error) {
+      console.error("Error fetching mitigation effectiveness:", error);
+      res.status(500).json({
+          error: "Error fetching mitigation effectiveness",
+          message: error.message
+      });
+  }
 });
 
 // Global error handler with logging
