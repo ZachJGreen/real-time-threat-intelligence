@@ -318,3 +318,5 @@ SELECT *
 FROM mitigation_actions
 WHERE created_at > CURRENT_TIMESTAMP - INTERVAL '7 days'
 ORDER BY created_at DESC;
+
+ALTER TABLE alerts ADD COLUMN IF NOT EXISTS threat_name VARCHAR(255);

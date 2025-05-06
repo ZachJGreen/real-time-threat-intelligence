@@ -153,6 +153,7 @@ app.get("/api/getRecentAlerts", async (req, res) => {
               description,
               status,
               created_at,
+              threat_name,
               threats:threat_id (id, threat_name)
           `)
           .order('created_at', { ascending: false })
@@ -208,6 +209,7 @@ app.get("/api/getAllAlerts", async (req, res) => {
         description,
         status,
         created_at,
+        threat_name,
         threats:threat_id (id, threat_name)
       `)
       .order('created_at', { ascending: false });
@@ -241,7 +243,7 @@ app.post("/api/createAlert", async (req, res) => {
         source: 'manual',
         created_by: req.ip || 'unknown'
       });
-      
+
       // Find associated threat
       const { data: threats } = await supabase
         .from('threats')
@@ -257,6 +259,7 @@ app.post("/api/createAlert", async (req, res) => {
         .insert({
           alert_type: risk_score >= 20 ? 'Critical' : 'High Risk',
           threat_id: threat_id,
+          threat_name: threat_name,
           risk_score: risk_score,
           description: description || `${threat_name} detected with risk score of ${risk_score}`,
           status: 'Open',
@@ -270,7 +273,7 @@ app.post("/api/createAlert", async (req, res) => {
         }
         logger.logSystem('INFO', 'Alert created successfully', { alert_id: data[0].id });
 
-        // For critical and high-risk threats, trigger automatic mitigation
+      // For critical and high-risk threats, trigger automatic mitigation
       let mitigationResult = null;
       if (risk_score >= 15) {
         try {

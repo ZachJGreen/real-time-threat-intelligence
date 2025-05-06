@@ -193,7 +193,7 @@
               <span class="alert-time">{{ formatTime(alert.created_at) }}</span>
             </div>
             <div class="alert-body">
-              <h4>{{ alert.threats?.threat_name || 'Unknown Threat' }}</h4>
+              <h4>{{ alert.threat_name || alert.threats?.threat_name || 'Unnamed Threat' }}</h4>
               <p>{{ alert.description }}</p>
               <div class="alert-score">
                 Risk Score: <span :class="getRiskClass(alert.risk_score)">{{ alert.risk_score }}</span>
