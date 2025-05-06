@@ -14,6 +14,7 @@ import Home from './components/Home.vue'
   <nav>
     <RouterLink to="/">Home</RouterLink>
     <RouterLink to="/dashboard">Dashboard</RouterLink>
+    <RouterLink to="/mitigation">Threat Mitigation</RouterLink>
   </nav>
 
   <main>

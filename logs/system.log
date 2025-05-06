@@ -14,3 +14,22 @@
 [2025-05-05 17:26:40.923] [INFO] Alert created successfully {"alert_id":202}
 [2025-05-05 17:26:45.941] [INFO] Alert created successfully {"alert_id":203}
 [2025-05-05 17:27:29.973] [INFO] SIGINT received, shutting down gracefully
+[2025-05-05 20:13:32.790] [INFO] Alert created successfully {"alert_id":204}
+[2025-05-05 20:13:32.794] [INFO] Starting automated mitigation for Threat 48 {"threat_type":"Threat 48","risk_score":56}
+[2025-05-05 20:13:32.796] [INFO] Notification sent with urgency: critical {"recipients":["security-team","management"],"urgency":"critical"}
+[2025-05-05 20:13:33.039] [INFO] Automatic mitigation completed {"alert_id":204,"success":true}
+[2025-05-05 20:13:42.561] [INFO] Alert created successfully {"alert_id":205}
+[2025-05-05 20:13:42.565] [INFO] Starting automated mitigation for Threat 72 {"threat_type":"Threat 72","risk_score":47}
+[2025-05-05 20:13:42.565] [INFO] Notification sent with urgency: critical {"recipients":["security-team","management"],"urgency":"critical"}
+[2025-05-05 20:13:42.797] [INFO] Automatic mitigation completed {"alert_id":205,"success":true}
+[2025-05-05 20:13:49.795] [INFO] SIGINT received, shutting down gracefully
+[2025-05-05 20:20:02.682] [INFO] SIGINT received, shutting down gracefully
+[2025-05-05 20:20:54.735] [INFO] Alert created successfully {"alert_id":206}
+[2025-05-05 20:20:54.739] [INFO] Starting automated mitigation for Threat 5 {"threat_type":"Threat 5","risk_score":45}
+[2025-05-05 20:20:54.740] [INFO] Notification sent with urgency: critical {"recipients":["security-team","management"],"urgency":"critical"}
+[2025-05-05 20:20:54.883] [INFO] Automatic mitigation completed {"alert_id":206,"success":true}
+[2025-05-05 20:20:59.749] [INFO] Alert created successfully {"alert_id":207}
+[2025-05-05 20:20:59.751] [INFO] Starting automated mitigation for Threat 16 {"threat_type":"Threat 16","risk_score":46}
+[2025-05-05 20:20:59.752] [INFO] Notification sent with urgency: critical {"recipients":["security-team","management"],"urgency":"critical"}
+[2025-05-05 20:20:59.883] [INFO] Automatic mitigation completed {"alert_id":207,"success":true}
+[2025-05-05 20:21:14.491] [INFO] SIGINT received, shutting down gracefully

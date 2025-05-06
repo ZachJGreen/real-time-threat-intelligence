@@ -2,11 +2,24 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { createClient } = require('@supabase/supabase-js');
-const config = require('./config');
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+
 
 // Initialize Supabase client
-const supabase = createClient(config.SUPABASE_URL, config.SUPABASE_KEY);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
+let supabase = null;
+if (supabaseUrl && supabaseKey) {
+    try {
+        supabase = createClient(supabaseUrl, supabaseKey);
+        console.log('Supabase client initialized successfully in blue_team_defense.js');
+    } catch (error) {
+        console.error('Failed to initialize Supabase client:', error);
+    }
+} else {
+    console.warn('Missing Supabase URL or key. Database features will be disabled.');
+}
 class BlueTeamDefense {
     constructor() {
         this.firewallRules = new Map();

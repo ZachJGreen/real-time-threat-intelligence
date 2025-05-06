@@ -1,5 +1,6 @@
-
-require('dotenv').config(); 
+const path = require('path');
+const dotenvPath = path.resolve(__dirname, '../../.env');
+require('dotenv').config({ path: dotenvPath });
 
 module.exports = {
     shodanApiKey: process.env.SHODAN_API_KEY,
