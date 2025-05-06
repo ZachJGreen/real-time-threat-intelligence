@@ -1,0 +1,105 @@
+# Security Validation Report of ShopSmart Solutions
+
+**Date:** 6th May, 2025 
+**Tools Used:** OWASP ZAP, Nmap
+
+---
+
+## Tool- OWASP ZAP
+
+## 1. Summary
+
+This report summarizes the security validation efforts performed on a locally hosted web application. The testing concentrated on finding common vulnerabilities with OWASP ZAP, analysing open ports with Nmap, and offering recommendations for strengthening the security posture of the system.
+
+
+---
+
+## 2. OWASP ZAP Scan Summary
+
+**Target:** http://localhost:5173  
+**Tool:** OWASP ZAP v2.16.1  
+
+
+### Alerts Found:
+
+| Alert Type                                  | Risk Level   | Confidence |
+|--------------------------------------------|--------------|------------|
+| Content Security Policy Header Not Set     | Medium       | High       |
+| Missing Anti-clickjacking Header           | Medium       | Medium     |
+| Hidden File Found                           | Medium       | Low        |
+| X-Content-Type-Options Header Missing      | Low          | Medium     |
+| Modern Web Application                     | Informational| Medium     |
+
+
+**Detailed Findings:**
+
+- **Content Security Policy Not Set**  
+  Risk: Medium | URL: `/sitemap.xml`  
+  *No CSP header set; could allow XSS or data injection attacks.*  
+  **Recommendation:** Add a `Content-Security-Policy` header.
+
+- **Missing Anti-clickjacking Header**  
+  Risk: Medium | URL: `/`  
+  *Lack of `X-Frame-Options` or `frame-ancestors`; page may be vulnerable to clickjacking.*  
+  **Recommendation:** Use `X-Frame-Options: DENY` or `Content-Security-Policy: frame-ancestors 'none';`.
+
+- **Hidden File Found (.hg)**  
+  Risk: Medium | URL: `/.hg`  
+  *Exposes potential sensitive configuration or source files.*  
+  **Recommendation:** Remove or restrict access to hidden files.
+
+- **X-Content-Type-Options Header Missing**  
+  Risk: Low | URL: `/favicon.ico`  
+  *Absence of `X-Content-Type-Options` may allow MIME-type sniffing.*  
+  **Recommendation:** Add header `X-Content-Type-Options: nosniff`.
+
+- **Modern Web Application**  
+  Info: Application is recognized as a modern web app.  
+  **Note:** No issue, just information. Consider using AJAX spidering for dynamic routes.
+
+---
+
+## Nmap Scan Results
+
+**Command Used:**
+```bash
+nmap -p- localhost
+```
+
+**Open Ports Detected:**
+
+| Port    | State | Service        |
+|---------|-------|----------------|
+| 3306    | open  | mysql          |
+| 5000    | open  | upnp           |
+| 5001    | open  | commplex-link  |
+| 6463    | open  | unknown        |
+| 7000    | open  | afs3-fileserver|
+| 8080    | open  | http-proxy     |
+| 33060   | open  | mysqlx         |
+| 54707   | open  | unknown        |
+| 54708   | open  | unknown        |
+| 57495   | open  | unknown        |
+| 57497   | open  | unknown        |
+| 59746   | open  | unknown        |
+| 60317   | open  | unknown        |
+| 63342   | open  | unknown        |
+
+**Recommendations:**
+- Close or firewall unused ports
+- Identify unknown services
+- Limit MySQL access to trusted hosts
+- Serve over HTTPS if 8080 is for HTTP traffic
+
+---
+
+## 4. Overall Assessment
+
+The target system reveals typical misconfigurations like missing headers and exposed hidden files. Alongside multiple open ports, these gaps may be exploited. Implementing recommended headers, cleaning up server files, and restricting access to ports would significantly improve security.
+
+---
+
+## 5. Appendix
+
+- OWASP ZAP full HTML report attached
+- Nmap CLI output available
