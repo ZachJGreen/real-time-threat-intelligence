@@ -6,6 +6,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "pdfkit": "^0.17.1",
     "pg": "^8.14.1",
     "vue-toastification": "^2.0.0-rc.5"
   }

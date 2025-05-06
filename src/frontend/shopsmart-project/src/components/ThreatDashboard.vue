@@ -137,6 +137,9 @@
               Generate CSV Report
             </v-btn>
           </download-csv>
+          <button @click="generatePdfReport" class="action-btn report-btn">
+            Generate PDF Report
+          </button>
         </div>
         
         <div class="table-container">
@@ -429,6 +432,71 @@ export default {
       }
     }
     },
+
+    async generateReport() {
+  try {
+    this.loading = true;
+    const response = await axios.post('http://localhost:5001/api/generateReport', {
+      threats: this.threatLogs,
+      options: {
+      title: 'ShopSmart Threat Intelligence Report',
+      company: 'ShopSmart Solutions'
+      }
+    });
+    
+    // Show success message
+    this.toast.success('Report generated successfully');
+    
+    // Optionally, provide a download link
+    const reportUrl = `http://localhost:5001/reports/${path.basename(response.data.path)}`;
+    window.open(reportUrl, '_blank');
+  } catch (error) {
+    console.error('Error generating report:', error);
+    this.toast.error('Failed to generate report');
+  } finally {
+    this.loading = false;
+  }
+},
+async generatePdfReport() {
+  try {
+    // Show loading state
+    this.toast.info('Generating PDF report...', {
+      timeout: 3000
+    });
+    
+    // Prepare the data
+    const reportData = this.filteredThreatLogs.length > 0 
+      ? this.filteredThreatLogs 
+      : this.threatLogs;
+    
+    if (reportData.length === 0) {
+      this.toast.error('No threat data available for report');
+      return;
+    }
+    
+    // Call the API
+    const response = await axios.post('http://localhost:5001/api/generateReport', {
+      threats: reportData,
+      options: {
+        title: 'ShopSmart Threat Intelligence Report',
+        company: 'ShopSmart Solutions'
+      }
+    });
+    
+    if (response.data.success) {
+      // Open the report in a new tab
+      const reportUrl = `http://localhost:5001/reports/${response.data.fileName}`;
+      window.open(reportUrl, '_blank');
+      
+      this.toast.success('PDF report generated successfully');
+    } else {
+      throw new Error(response.data.message || 'Failed to generate report');
+    }
+  } catch (error) {
+    console.error('Error generating PDF report:', error);
+    this.toast.error(`Failed to generate report: ${error.message}`);
+  }
+}
   },
   mounted() {
     this.fetchData();
@@ -851,6 +919,17 @@ h3 {
 
 .cancel-btn:hover {
   background-color: #e0e0e0;
+}
+
+.report-btn {
+  background-color: #3182ce;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.report-btn:hover {
+  background-color: #2c5282;
 }
 
 /* Responsive adjustments */

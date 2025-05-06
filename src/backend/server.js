@@ -8,6 +8,9 @@ const { getIncidentResponsePlan } = require("./incident_response");
 const cbaAnalysis = require('./cba_analysis');
 const logger = require('./logging');
 const threatMitigation = require('./threat_mitigation');
+const { generateThreatReport } = require('./report_generator');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 
@@ -481,6 +484,78 @@ app.get("/api/mitigationEffectiveness", async (req, res) => {
           message: error.message
       });
   }
+});
+
+app.post("/api/generateReport", async (req, res) => {
+  try {
+    console.log("Report generation requested");
+    const { threats, options } = req.body; // This is correct
+    
+    if (!threats || !Array.isArray(threats)) {
+      console.log("Invalid threat data:", threats);
+      return res.status(400).json({ error: "Valid threat data is required" });
+    }
+    
+    console.log(`Processing ${threats.length} threats for report`);
+    
+    // Create reports directory if it doesn't exist
+    const reportsDir = path.join(__dirname, '../../reports');
+    console.log("Reports directory:", reportsDir);
+    
+    if (!fs.existsSync(reportsDir)) {
+      console.log("Creating reports directory");
+      fs.mkdirSync(reportsDir, { recursive: true });
+    }
+    
+    // Generate unique filename
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const outputFile = `threat_report_${timestamp}.pdf`;
+    const outputPath = path.join(reportsDir, outputFile);
+    console.log("Output path:", outputPath);
+    
+    // Default options - USE THE options VARIABLE FROM req.body
+    const reportOptions = {
+      outputPath,
+      title: options?.title || 'ShopSmart Threat Intelligence Report',
+      company: options?.company || 'ShopSmart Solutions'
+    };
+    
+    console.log("Generating report with options:", reportOptions);
+    
+    const result = await generateThreatReport(threats, reportOptions);
+    console.log("Report generated successfully:", result);
+    
+    // Send file path back to frontend
+    res.json({ 
+      success: true, 
+      filePath: result,
+      fileName: path.basename(result)
+    });
+  } catch (error) {
+    console.error('Error generating report:', error);
+    res.status(500).json({ 
+      error: "Failed to generate report", 
+      message: error.message
+    });
+  }
+});
+
+app.get("/reports/:filename", (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, '../../reports', filename);
+  
+  // Security check to prevent directory traversal
+  if (!filename || filename.includes('..')) {
+    return res.status(400).send('Invalid filename');
+  }
+  
+  // Check if file exists
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('File not found');
+  }
+  
+  // Send the file
+  res.sendFile(filePath);
 });
 
 // Global error handler with logging
