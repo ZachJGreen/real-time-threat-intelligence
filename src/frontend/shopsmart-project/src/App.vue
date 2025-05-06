@@ -6,7 +6,7 @@ import Home from './components/Home.vue'
 <template>
   <header>
     <div class="wrapper">
-      <Banner msg="Welcome to our" />
+      <Banner msg="Welcome to" />
     </div>
   
   </header>
