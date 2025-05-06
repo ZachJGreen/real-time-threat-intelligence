@@ -130,11 +130,11 @@
           <download-csv
             :data="filteredThreatLogs"
             :fields="csvFields"
-            name="Threat_Data.csv"
+            name="ShopSmart_Threat_Intelligence_Report.csv"
             class="threat-download-csv"
           >
             <v-btn color="info" dark tile elevation="0">
-              Generate CSV
+              Generate CSV Report
             </v-btn>
           </download-csv>
         </div>
@@ -241,6 +241,7 @@ import CostBenefitAnalysis from './CostBenefitAnalysis.vue';
 import { threatData, threatLogData } from "../utils/risk_prioritization";
 import JsonCSV from 'vue-json-csv';
 import { useToast } from 'vue-toastification';
+import { getCSVFields, prepareCSVData } from '../utils/csv-utils';
 
 export default {
   components: {
@@ -248,8 +249,8 @@ export default {
     CostBenefitAnalysis
   },
   setup() {
-    const toast = useToast(); // Add this line
-    return { toast }; // Add this line
+    const toast = useToast();
+    return { toast };
   },
   data() {
     return {
@@ -274,14 +275,7 @@ export default {
         { time: new Date(Date.now() - 55 * 60000), text: 'System scan completed' },
         { time: new Date(Date.now() - 125 * 60000), text: 'Alert: Suspicious login attempt' }
       ],
-      csvFields: {
-        'threat_name': 'Threat',
-        'asset_name': 'Asset',
-        'vulnerability_name': 'Vulnerability',
-        'likelihood': 'Likelihood',
-        'impact': 'Impact',
-        'risk_score': 'Risk Score'
-      }
+      csvFields: getCSVFields()
     };
   },
   computed: {
@@ -312,6 +306,9 @@ export default {
         
         return matchesFilter && matchesAsset;
       });
+    },
+    csvData(){
+      return prepareCSVData(this.filteredThreatLogs);
     }
   },
   methods: {
