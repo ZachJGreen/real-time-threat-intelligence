@@ -501,9 +501,9 @@
   
   .dialog-content {
     background-color: white;
-    border-radius: 8px;
     padding: 20px;
-    width: 500px;
+    border-radius: 8px;
+    width: 400px;
     max-width: 90%;
     color: #333; /* Ensuring dialog text is dark */
   }
@@ -519,14 +519,18 @@
     color: #333; /* Darker label text */
   }
   
-  .form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #e2e8f0;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #333; /* Making input text dark */
-  }
+.form-control, 
+input[type="text"], 
+input[type="number"], 
+textarea, 
+select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  color: #333;
+}
   
   .form-control::placeholder {
     color: #a0aec0; /* Medium gray placeholder text */

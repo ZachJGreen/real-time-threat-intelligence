@@ -115,7 +115,7 @@
         this.results = [];
         
         try {
-          const response = await axios.post('http://localhost:5000/api/performCBA', {
+          const response = await axios.post('http://localhost:5001/api/performCBA', {
             threatId: this.selectedThreat.id,
             threatType: this.selectedThreat.threat_name,
             assetValue: this.assetValue
@@ -177,14 +177,15 @@
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+    color: #333;
   }
   
   .form-control {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 16px;
+    background-color: white;
+    color: #333;
   }
   
   .analyze-btn {
@@ -228,11 +229,13 @@
     border: 1px solid #ddd;
     padding: 12px;
     text-align: center;
+    color: #333;
   }
   
   .cba-table th {
     background-color: #f2f2f2;
     font-weight: bold;
+    color: #333;
   }
   
   .cba-table tr:hover {
@@ -257,6 +260,7 @@
   
   .recommendation {
     font-weight: bold;
+    color: #333;
   }
   
   .control-details {
@@ -264,6 +268,7 @@
     padding: 15px;
     border-radius: 4px;
     margin-top: 20px;
+    color: #333;
   }
   
   @media (max-width: 768px) {
