@@ -65,7 +65,6 @@ app.post("/api/fetchShodanThreatData", async (req, res) => {
 // Get threat data for dashboard
 app.get("/api/getThreatData", async (req, res) => {
   try {
-    console.log("🔄 Received frontend request for threat data");
     // Fetch TVA mapping data from Supabase
     const { data: tvaData, error: tvaError } = await supabase
       .from('tva_mapping')

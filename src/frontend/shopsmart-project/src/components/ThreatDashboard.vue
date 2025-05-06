@@ -321,7 +321,7 @@ export default {
       
       try {
         console.log('Fetching threat data...');
-        const response = await axios.get('http://localhost:1/api/getThreatData');
+        const response = await axios.get('http://localhost:5001/api/getThreatData');
         this.threatLogs = response.data;
         
         const totalRiskScore = this.threatLogs.reduce((sum, log) => sum + log.risk_score, 0);
