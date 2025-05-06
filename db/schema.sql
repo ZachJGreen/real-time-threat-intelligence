@@ -288,3 +288,33 @@ FROM security_logs
 WHERE severity IN ('HIGH', 'CRITICAL')
   AND created_at > CURRENT_TIMESTAMP - INTERVAL '7 days'
 ORDER BY created_at DESC;
+
+
+-- THREAT MITIGATIONS --
+-- Table for storing automated threat mitigation actions
+CREATE TABLE IF NOT EXISTS mitigation_actions (
+    id SERIAL PRIMARY KEY,
+    threat_id VARCHAR(255), -- Can be actual DB ID or temp ID for threats not in DB
+    threat_type VARCHAR(100) NOT NULL,
+    risk_score INTEGER NOT NULL,
+    severity VARCHAR(20) NOT NULL CHECK (severity IN ('critical', 'high', 'medium', 'low')),
+    actions_taken JSONB NOT NULL,
+    results JSONB,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'in_progress', 'completed', 'failed')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMP WITH TIME ZONE
+);
+
+-- Add indexes for better query performance
+CREATE INDEX IF NOT EXISTS idx_mitigation_threat_id ON mitigation_actions(threat_id);
+CREATE INDEX IF NOT EXISTS idx_mitigation_threat_type ON mitigation_actions(threat_type);
+CREATE INDEX IF NOT EXISTS idx_mitigation_severity ON mitigation_actions(severity);
+CREATE INDEX IF NOT EXISTS idx_mitigation_status ON mitigation_actions(status);
+CREATE INDEX IF NOT EXISTS idx_mitigation_created_at ON mitigation_actions(created_at);
+
+-- Create a view for recent mitigation actions
+CREATE OR REPLACE VIEW recent_mitigations AS
+SELECT *
+FROM mitigation_actions
+WHERE created_at > CURRENT_TIMESTAMP - INTERVAL '7 days'
+ORDER BY created_at DESC;
