@@ -23,8 +23,8 @@ Week 9 — *Deadline: 20 April 2025*
 | Security Validation Report(Maisha)           | `NEED/docs/security_validation.md`                                         |
 | Performance Test Results(Zach)             | `NEED/docs/performance_testing.md`                                         |
 | Optimized Database Queries(Hallee)           | `db/query_optimizations.sql`                                          |
-| Deployment Checklist & Production Setup(Morgan) | `NEED/docs/deployment_checklist.md`                                    |
-| Peer Review Report & Issue Tracking(Morgan)  | `/docs/peer_review.md`, `NEED/docs/issue_tracking.md`                     |
+| Deployment Checklist & Production Setup(Morgan) | `/docs/deployment_checklist.md`                                    |
+| Peer Review Report & Issue Tracking(Morgan)  | `/docs/peer_review.md`, `/docs/issue_tracking.md`                     |
 | Troubleshooting & Maintenance Guide  | `/docs/troubleshooting_guide.md`                                       |
 
 ---
