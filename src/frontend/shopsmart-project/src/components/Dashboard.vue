@@ -2,10 +2,39 @@
   <div class="container">
     <h1>Main Dashboard</h1>
 
+    <div class="control-panel">
     <button @click="showDashboard = !showDashboard" class="dashboard-btn">
       {{  showDashboard ? "Hide Dashboard" : "Show Dashboard "}}
     </button>
     
+    <!-- Add simulation control toggle -->
+    <div class="simulation-controls">
+        <label for="simulationToggle" class="toggle-label">
+          Threat Simulation: 
+          <input 
+            id="simulationToggle" 
+            type="checkbox" 
+            v-model="simulationEnabled"
+            @change="toggleSimulation"
+          />
+          <span>{{ simulationEnabled ? 'Enabled' : 'Disabled' }}</span>
+        </label>
+        
+        <div v-if="simulationEnabled" class="simulation-settings">
+          <label>
+            Interval (seconds):
+            <input 
+              type="number" 
+              v-model.number="simulationInterval" 
+              min="10" 
+              max="300"
+              @change="updateSimulationInterval"
+            />
+          </label>
+        </div>
+      </div>
+    </div>
+
     <ThreatDashboard v-if="showDashboard" />
   </div>
 </template>
@@ -27,6 +56,11 @@ export default {
       alerts: [],
       toast: useToast(),
       alertsPollingInterval: null,
+
+      // Simulation settings
+      simulationEnabled: false,
+      simulationInterval: 15, // Default: 15 seconds
+      simulationIntervalId: null
     };
   },
   methods: {
@@ -47,16 +81,16 @@ export default {
       if (newThreat.riskScore > 20) {
         this.notifyCriticalThreat(newThreat);
       }
-
-      this.toast.info(`New threat detected: ${newThreat.name}`, {
-        timeout: 5000,
-      });
+      // Only show toast notification for critical threats
+      if (newThreat.riskScore > 15) {
+        this.toast.info(`New threat detected: ${newThreat.name}`, {
+          timeout: 5000,
+        });
+      }
     },
 
     async notifyCriticalThreat(threat) {
       console.log(`Critical Threat Detected: ${threat.name}`);
-
-      const webhookUrl = "https://real-webhook-url.com/alert";
 
       try {
 
@@ -78,6 +112,55 @@ export default {
           timeout: 6000,
         });
       }
+  },
+
+  // New methods for simulation control
+  toggleSimulation() {
+      if (this.simulationEnabled) {
+        this.startSimulation();
+      } else {
+        this.stopSimulation();
+      }
+    },
+    
+    startSimulation() {
+      // Clear any existing simulation
+      this.stopSimulation();
+      
+      // Convert seconds to milliseconds
+      const intervalMs = this.simulationInterval * 1000;
+      
+      // Start new simulation with current interval
+      this.simulationIntervalId = setInterval(() => {
+        const newThreat = {
+          id: Date.now(),
+          name: `Threat ${Math.floor(Math.random() * 100)}`,
+          riskScore: Math.floor(Math.random() * 60),
+        };
+        this.receiveThreat(newThreat);
+      }, intervalMs);
+      
+      console.log(`Simulation started with ${this.simulationInterval} second interval`);
+    },
+    
+    stopSimulation() {
+      if (this.simulationIntervalId) {
+        clearInterval(this.simulationIntervalId);
+        this.simulationIntervalId = null;
+        console.log('Simulation stopped');
+      }
+    },
+    
+    updateSimulationInterval() {
+      // Ensure minimum interval
+      if (this.simulationInterval < 10) {
+        this.simulationInterval = 10;
+      }
+      
+      // If simulation is running, restart with new interval
+      if (this.simulationEnabled) {
+        this.startSimulation();
+      }
     }
   },
 
@@ -89,16 +172,6 @@ export default {
     this.alertsPollingInterval = setInterval(() => {
       this.fetchAlerts();
     }, 30000);
-
-    // Simulating new threats every 5 seconds
-    setInterval(() => {
-      const newThreat = {
-        id: Date.now(),
-        name: `Threat ${Math.floor(Math.random() * 100)}`,
-        riskScore: Math.floor(Math.random() * 60),
-      };
-      this.receiveThreat(newThreat);
-    }, 5000);
   },
 
   beforeUnmount() {
@@ -106,6 +179,9 @@ export default {
     if (this.alertsPollingInterval) {
       clearInterval(this.alertsPollingInterval);
     }
+
+    // Stop simulation if running
+    this.stopSimulation();
   }
 };
 </script>
