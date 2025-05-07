@@ -9,7 +9,7 @@ Week 10 — *Deadline: 27 April 2025*
 | Task                          | Submission Path                      |
 |-------------------------------|---------------------------------------|
 | Final Project Report(Hallee)          | `/docs/final_project_report.pdf`     |
-| Final Presentation Slides(Morgan)     | `NEED/docs/final_presentation.pptx`      |
+| Final Presentation Slides(Morgan)     | `/docs/final_presentation.pdf`      |
 | Final System Demonstration *(optional)*(Together) | `NEED/docs/final_demo.mp4`           |
 | System Walkthrough Guide(Zach)      | `/docs/system_walkthrough.md`        |
 | Final Git Repository Update   | `/README.md`                         |
@@ -20,7 +20,7 @@ Week 9 — *Deadline: 20 April 2025*
 
 | Task                                 | Submission Path                                                        |
 |--------------------------------------|-------------------------------------------------------------------------|
-| Security Validation Report(Maisha)           | `NEED/docs/security_validation.md`                                         |
+| Security Validation Report(Maisha)           | `/docs/security_validation.md`                                         |
 | Performance Test Results(Zach)             | `/docs/performance_test.md`                                         |
 | Optimized Database Queries(Hallee)           | `db/query_optimizations.sql`                                          |
 | Deployment Checklist & Production Setup(Morgan) | `/docs/deployment_checklist.md`                                    |
